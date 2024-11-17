@@ -6,11 +6,11 @@ execute:
   echo: true
 
 book:
-  title: "YOUR PROJECT TITLE"
+  title: "H1B 2K16 Analysis"
   author:
-    - AUTHOR1 (UNI1)
-    - AUTHOR2 (UNI2)
-  repo-url: https://github.com/YOUR_GITHUB_ACCOUNT/REPO_NAME
+    - Tanmay Sharma (ts3647)
+    - Aditya Misra (am6532)
+  repo-url: https://github.com/AdityMisra/H1B-2k16/
   date: today
   page-footer:
     right: |
