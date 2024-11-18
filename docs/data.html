@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>2&nbsp; Data – H1B 2K16 Analysis</title>
+<title>2&nbsp; Data – H1B 2K17 Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -96,7 +96,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">H1B 2K16 Analysis</a> 
+      <a href="./">H1B 2K17 Analysis</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/AdityMisra/H1B-2k16/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
 </div>
@@ -149,7 +149,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#description" id="toc-description" class="nav-link active" data-scroll-target="#description"><span class="header-section-number">2.1</span> Description</a></li>
+  <li><a href="#description" id="toc-description" class="nav-link active" data-scroll-target="#description"><span class="header-section-number">2.1</span> Description</a>
+  <ul class="collapse">
+  <li><a href="#data-collection-and-source" id="toc-data-collection-and-source" class="nav-link" data-scroll-target="#data-collection-and-source"><span class="header-section-number">2.1.1</span> <strong>1. Data Collection and Source</strong></a></li>
+  <li><a href="#data-format" id="toc-data-format" class="nav-link" data-scroll-target="#data-format"><span class="header-section-number">2.1.2</span> <strong>2. Data Format</strong></a></li>
+  <li><a href="#frequency-of-updates" id="toc-frequency-of-updates" class="nav-link" data-scroll-target="#frequency-of-updates"><span class="header-section-number">2.1.3</span> <strong>3. Frequency of Updates</strong></a></li>
+  <li><a href="#data-dimensions" id="toc-data-dimensions" class="nav-link" data-scroll-target="#data-dimensions"><span class="header-section-number">2.1.4</span> <strong>4. Data Dimensions</strong></a></li>
+  <li><a href="#data-issues-and-challenges" id="toc-data-issues-and-challenges" class="nav-link" data-scroll-target="#data-issues-and-challenges"><span class="header-section-number">2.1.5</span> <strong>5. Data Issues and Challenges</strong></a></li>
+  <li><a href="#data-import-plan" id="toc-data-import-plan" class="nav-link" data-scroll-target="#data-import-plan"><span class="header-section-number">2.1.6</span> <strong>6. Data Import Plan</strong></a></li>
+  <li><a href="#documentation-of-sources" id="toc-documentation-of-sources" class="nav-link" data-scroll-target="#documentation-of-sources"><span class="header-section-number">2.1.7</span> <strong>7. Documentation of Sources</strong></a></li>
+  </ul></li>
   <li><a href="#missing-value-analysis" id="toc-missing-value-analysis" class="nav-link" data-scroll-target="#missing-value-analysis"><span class="header-section-number">2.2</span> Missing value analysis</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/AdityMisra/H1B-2k16/edit/main/data.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/AdityMisra/H1B-2k16/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -178,6 +187,85 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="description" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="description"><span class="header-section-number">2.1</span> Description</h2>
+<section id="data-collection-and-source" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="data-collection-and-source"><span class="header-section-number">2.1.1</span> <strong>1. Data Collection and Source</strong></h3>
+<ul>
+<li><p><strong>Collected By</strong>: This data is collected by the Office of Foreign Labor Certification (OFLC) under the U.S. Department of Labor.</p></li>
+<li><p><strong>How Data is Collected</strong>:</p>
+<ul>
+<li><p>Data is extracted from nonimmigrant and immigrant application tables in the OFLC’s case management systems.</p></li>
+<li><p>Employers submit applications, and the information from these forms is entered into the system, including metadata generated during processing (e.g., submission and decision dates).</p></li>
+</ul></li>
+<li><p><strong>Source Access</strong>:</p>
+<ul>
+<li><p>This dataset is publicly available via the OFLC website and is distributed in Excel (.xlsx) format.</p></li>
+<li><p>Download link for historical data: https://www.dol.gov/sites/dolgov/files/ETA/oflc/pdfs/H-1B_Disclosure_Data_FY17.xlsx</p></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="data-format" class="level3" data-number="2.1.2">
+<h3 data-number="2.1.2" class="anchored" data-anchor-id="data-format"><span class="header-section-number">2.1.2</span> <strong>2. Data Format</strong></h3>
+<ul>
+<li><p><strong>File Type</strong>: Microsoft Excel (.xlsx).</p></li>
+<li><p><strong>Organization</strong>:</p>
+<ul>
+<li><p>This dataset is cumulative for the fiscal year (October 1 – September 30).</p></li>
+<li><p>It contains records with unique identifiers (e.g., OFLC case numbers).</p></li>
+</ul></li>
+<li><p><strong>Fields Included</strong>:</p>
+<ul>
+<li><p>Employer-provided data (e.g., job title, worksite location, prevailing wage, and visa type).</p></li>
+<li><p>Metadata generated by the system (e.g., case status, received date, and determination date).</p></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="frequency-of-updates" class="level3" data-number="2.1.3">
+<h3 data-number="2.1.3" class="anchored" data-anchor-id="frequency-of-updates"><span class="header-section-number">2.1.3</span> <strong>3. Frequency of Updates</strong></h3>
+<ul>
+<li><p>The data is updated quarterly and annually.</p></li>
+<li><p>The H1-B 2017 dataset specifically covers cases for the fiscal year 2017 (October 1, 2016 – September 30, 2017) and will not receive further updates.</p></li>
+</ul>
+<hr>
+</section>
+<section id="data-dimensions" class="level3" data-number="2.1.4">
+<h3 data-number="2.1.4" class="anchored" data-anchor-id="data-dimensions"><span class="header-section-number">2.1.4</span> <strong>4. Data Dimensions</strong></h3>
+<ul>
+<li><p><strong>Number of Records</strong>: Depends on the fiscal year’s total applications, in this case its 624651 rows.</p></li>
+<li><p><strong>Columns/Attributes</strong>: 52 columns.</p></li>
+</ul>
+<hr>
+</section>
+<section id="data-issues-and-challenges" class="level3" data-number="2.1.5">
+<h3 data-number="2.1.5" class="anchored" data-anchor-id="data-issues-and-challenges"><span class="header-section-number">2.1.5</span> <strong>5. Data Issues and Challenges</strong></h3>
+<ul>
+<li><p><strong>Known Issues</strong>:</p>
+<ul>
+<li><p><strong>Data Quality</strong>: Typographical errors and incomplete fields due to employer input errors or processing limitations.</p></li>
+<li><p><strong>Standardization</strong>: Some fields might have inconsistent formats (e.g., job titles, worksite addresses or wages).</p></li>
+<li><p><strong>Omissions</strong>: Records might exclude certain case details if the application is still under processing or if it includes open-ended text.</p></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="data-import-plan" class="level3" data-number="2.1.6">
+<h3 data-number="2.1.6" class="anchored" data-anchor-id="data-import-plan"><span class="header-section-number">2.1.6</span> <strong>6. Data Import Plan</strong></h3>
+<ul>
+<li><strong>Download</strong>: The data from the OFLC website will be downloaded using a R script as an xlsx file.</li>
+</ul>
+<hr>
+</section>
+<section id="documentation-of-sources" class="level3" data-number="2.1.7">
+<h3 data-number="2.1.7" class="anchored" data-anchor-id="documentation-of-sources"><span class="header-section-number">2.1.7</span> <strong>7. Documentation of Sources</strong></h3>
+<ul>
+<li><p>Primary Source: <strong>U.S. Department of Labor - Office of Foreign Labor Certification H-1B Disclosure Data</strong></p>
+<ul>
+<li><p>Website: https://www.dol.gov/agencies/eta/foreign-labor/performance</p></li>
+<li><p>H-1B data file for 2017: https://www.dol.gov/sites/dolgov/files/ETA/oflc/pdfs/H-1B_Disclosure_Data_FY17.xlsx</p></li>
+</ul></li>
+</ul>
+</section>
 </section>
 <section id="missing-value-analysis" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="missing-value-analysis"><span class="header-section-number">2.2</span> Missing value analysis</h2>
