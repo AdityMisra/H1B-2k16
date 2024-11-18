@@ -1,1 +1,31 @@
 # Introduction
+
+**Context**
+
+The H1B visa is a pathway for skilled foreign professionals to work in specialized fields in the United States. For international students and workers, it represents both an opportunity and a challenge due to its policy-driven nature. As discussions around potential changes to the program gain traction in 2024, understanding how industries, roles, and regions are impacted by such policies becomes increasingly important for navigating the uncertainties ahead.
+
+**Motivation**
+
+The H-1B visa program has long been a cornerstone for skilled international professionals seeking opportunities in the USA. As international students pursuing higher education, we are interested in understanding the potential implications of policy shifts on our future career prospects. Our project examines H-1B visa trends during 2016, a pivotal year marked by a political transition as the Trump administration assumed office. We aim to analyze what changes occurred in industries, states, and job roles associated with H-1B visa sponsorship during that time. While we recognize that the socio-political and economic contexts of 2016 differ from those of today, this retrospective analysis helps us better understand the concerns surrounding the H-1B program in times of policy uncertainty. By studying data from 2016, a year that generated similar apprehensions among international professionals and students, we hope to gain insights that inform our decisions about navigating a potentially similar environment in 2025. This project seeks to provide a data-driven perspective, balancing anecdotal narratives with objective analysis.
+
+**Key Questions**
+
+**Industry Trends:**
+
+Which industries most successfully obtained H-1B visas in 2016, and how does this distribution compare to other years?
+
+**State-Level Insights:**
+
+Which U.S. states had the highest number of approved H-1B petitions in 2016, and what factors contributed to their dominance?
+
+**Job Role Distribution:**
+
+What were the most common job roles for H-1B applicants in 2016, and how did these roles align with the prevailing demand for skills in the U.S. labor market?
+
+**Employer Characteristics:**
+
+Who were the top employers sponsoring H-1B visas in 2016, and what trends can be observed about these companies' size, industry, or location?
+
+**Approval Rates and Salary Trends:**
+
+Were there noticeable trends in the approval rates or salary levels for H-1B petitions in 2016, particularly about job roles, industries, or sponsoring states?
