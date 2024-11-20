@@ -247,3 +247,5 @@ ggplot(subset_data, aes(x = Variable, y = RowIndex, fill = Value)) +
 
 
 ```
+
+The heatmap displayed is a visualization of standardised values in the dataset for missing values analysis. No visible pattern was found on the plotting of  this graph indicating that there is no unique relationship between missing values of the columns. Additionally we also observe a fading effect when we take large number of rows. This is due to data being more homogenous, causing the the standarised values to cluster closer to 0. Some of the columns are completely white, indicating high number of missing values in those columns. 
