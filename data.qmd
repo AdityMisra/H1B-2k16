@@ -18,6 +18,8 @@
 
     -   Download link for historical data: https://www.dol.gov/sites/dolgov/files/ETA/oflc/pdfs/H-1B_Disclosure_Data_FY17.xlsx
 
+    -   Dataset fields description: <https://www.dol.gov/sites/dolgov/files/ETA/oflc/pdfs/H-1B_FY17_Record_Layout.pdf>
+
 ------------------------------------------------------------------------
 
 ### **2. Data Format**
@@ -81,3 +83,167 @@
     -   H-1B data file for 2017: https://www.dol.gov/sites/dolgov/files/ETA/oflc/pdfs/H-1B_Disclosure_Data_FY17.xlsx
 
 ## Missing value analysis
+
+```{r}
+# Load required libraries
+if (!require("readxl")) install.packages("readxl", dependencies = TRUE)
+if (!require("dplyr")) install.packages("dplyr", dependencies = TRUE)
+
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(tidyverse)
+```
+
+```{r}
+# Set the URL for the H1-B 2017 dataset
+url <- "https://www.dol.gov/sites/dolgov/files/ETA/oflc/pdfs/H-1B_Disclosure_Data_FY17.xlsx"
+
+# Specify the destination file path for the downloaded Excel file
+file_path <- "H-1B_Disclosure_Data_FY17.xlsx"
+
+# Download the file
+download.file(url, destfile = file_path, mode = "wb")
+
+# Read the Excel file into a data frame
+h1b_data <- read_excel(file_path)
+
+# Display the structure of the dataset
+head(h1b_data)
+
+# Save a cleaned version (if needed)
+write.csv(h1b_data, file = "H1B_2017_cleaned.csv", row.names = FALSE)
+
+
+```
+
+```{r}
+library(readr)
+library(dplyr)
+
+# Read the data
+h1b_data <- read_csv("H1B_2017_cleaned.csv")
+
+# Calculate missing value counts
+missing_values_summary <- colSums(is.na(h1b_data))
+
+# Filter only columns with missing values
+missing_columns <- missing_values_summary[missing_values_summary > 0]
+
+# Create a data frame with clear column names
+missing_table <- data.frame(
+  Column = names(missing_columns),
+  MissingCount = as.numeric(missing_columns) # Ensure the counts are numeric
+)
+
+# Display the table
+cat("Columns with Missing Values and Their Counts:\n")
+print(missing_table)
+
+# (Optional) Arrange and show as sorted table by missing counts
+sorted_table <- missing_table %>%
+  arrange(desc(MissingCount))
+
+cat("\nSorted Columns by Missing Values (Descending Order):\n")
+print(sorted_table)
+
+
+
+```
+
+The above table shows the missing values in each column respectively. We can see that missing values in some of the rows is huge (some of them are nearly empty). For example, Public Discolsure location is completely empty. It is possible that these values are not mandatory while filling the H-1B application, therefore leading to lot of missing information.
+
+```{r, fig.width=8, fig.height=8}
+
+# Calculate missing value percentage for each column
+missing_summary <- colSums(is.na(h1b_data)) / nrow(h1b_data) * 100
+missing_df <- data.frame(Column = names(missing_summary), MissingPercentage = missing_summary)
+# Plot the percentage of missing values per column, sorted by descending missing percentage
+ggplot(missing_df, aes(x = reorder(Column, MissingPercentage), y = MissingPercentage)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(
+    title = "Percentage of Missing Values per Column",
+    x = "Columns",
+    y = "Missing Percentage (%)"
+  ) +
+  theme_minimal()
+
+```
+
+The above horizontal bar graph gives a relative view of missing values in all the columns of the dataset. Missing values can, of course, complicate the analysis; however, in our case, the columns with a high number of missing values are not critical to our primary objectives. The data in these columns—such as PUBLIC_DISCLOSURE_LOCATION, EMPLOYER_PHONE_EXT, and EMPLOYER_PROVINCE—serve as supporting information rather than core data required for analysis.
+
+For example, columns like PUBLIC_DISCLOSURE_LOCATION only provides metadata about the file's storage location, which is not directly related to analyzing H-1B visa trends or employer statistics. Similarly, fields such as EMPLOYER_PHONE_EXT and EMPLOYER_PROVINCE primarily address contact details, which are not relevant for our analysis.
+
+```{r, fig.width=10, fig.height=10}
+set.seed(42)
+sampled_data <- h1b_data[sample(1:nrow(h1b_data), 5000), ]
+
+missing_long <- as.data.frame(is.na(sampled_data)) %>%
+  pivot_longer(cols = everything(), names_to = "Column", values_to = "IsMissing")
+
+missing_long <- cbind(RowIndex = rep(1:nrow(sampled_data), times = ncol(sampled_data)), missing_long)
+
+# Plot heatmap of missing data
+ggplot(missing_long, aes(x = Column, y = RowIndex, fill = IsMissing)) +
+  geom_tile() +
+  scale_fill_manual(values = c("FALSE" = "white", "TRUE" = "red"), name = "Missing") +
+  labs(title = "Heatmap of Missing Data (Sampled Rows)",
+       x = "Columns",
+       y = "Row Index") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+The above missing value heatmap shows that missing data is concentrated only in certain columns. The rest of the columns have little to no missing data. This helps us streamline the data cleaning process.
+
+```{r}
+# Group missingness by CASE_STATUS and calculate the average missing count
+grouped_missing <- h1b_data %>%
+  mutate(MissingCount = rowSums(is.na(.))) %>%
+  group_by(CASE_STATUS) %>%
+  summarise(AverageMissing = mean(MissingCount)) %>%
+  arrange(desc(AverageMissing)) # Optional: Sort for better visualization
+
+# Plot grouped missingness
+ggplot(grouped_missing, aes(x = reorder(CASE_STATUS, -AverageMissing), y = AverageMissing)) +
+  geom_bar(stat = "identity", fill = "orange") +
+  labs(title = "Average Missing Values by CASE STATUS",
+       x = "CASE STATUS",
+       y = "Average Missing Count") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+```
+
+This chart visualizes the average count of missing values for different categories of the column CASE_STATUS which represents the status of H-1B visa application.
+
+The average missing values are similar across all statuses indicating no major variation in the amount of missing data among different application statuses. This implies that to handle the missing data, this graph shows that removing missing values wont introduce bias towards a specific case status.
+
+```{r, fig.width=20, fig.height=20}
+numeric_data <- h1b_data %>%
+  select_if(is.numeric)
+
+standardized_data <- as.data.frame(scale(numeric_data))
+
+set.seed(42) # For reproducibility
+subset_data <- standardized_data[sample(1:nrow(standardized_data), 1000), ]
+
+subset_data <- subset_data %>%
+  mutate(RowIndex = 1:nrow(.)) %>%
+  pivot_longer(cols = -RowIndex, names_to = "Variable", values_to = "Value")
+
+ggplot(subset_data, aes(x = Variable, y = RowIndex, fill = Value)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", mid = "white", high = "black", midpoint = 0) +
+  labs(title = "Heatmap of Standardized Variables (Subset of Rows)",
+       x = "Variable",
+       y = "Row Index",
+       fill = "Standardized Value") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+
+```
