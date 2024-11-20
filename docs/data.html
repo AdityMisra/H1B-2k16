@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -151,13 +185,13 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#description" id="toc-description" class="nav-link active" data-scroll-target="#description"><span class="header-section-number">2.1</span> Description</a>
   <ul class="collapse">
-  <li><a href="#data-collection-and-source" id="toc-data-collection-and-source" class="nav-link" data-scroll-target="#data-collection-and-source"><span class="header-section-number">2.1.1</span> <strong>1. Data Collection and Source</strong></a></li>
-  <li><a href="#data-format" id="toc-data-format" class="nav-link" data-scroll-target="#data-format"><span class="header-section-number">2.1.2</span> <strong>2. Data Format</strong></a></li>
-  <li><a href="#frequency-of-updates" id="toc-frequency-of-updates" class="nav-link" data-scroll-target="#frequency-of-updates"><span class="header-section-number">2.1.3</span> <strong>3. Frequency of Updates</strong></a></li>
-  <li><a href="#data-dimensions" id="toc-data-dimensions" class="nav-link" data-scroll-target="#data-dimensions"><span class="header-section-number">2.1.4</span> <strong>4. Data Dimensions</strong></a></li>
-  <li><a href="#data-issues-and-challenges" id="toc-data-issues-and-challenges" class="nav-link" data-scroll-target="#data-issues-and-challenges"><span class="header-section-number">2.1.5</span> <strong>5. Data Issues and Challenges</strong></a></li>
-  <li><a href="#data-import-plan" id="toc-data-import-plan" class="nav-link" data-scroll-target="#data-import-plan"><span class="header-section-number">2.1.6</span> <strong>6. Data Import Plan</strong></a></li>
-  <li><a href="#documentation-of-sources" id="toc-documentation-of-sources" class="nav-link" data-scroll-target="#documentation-of-sources"><span class="header-section-number">2.1.7</span> <strong>7. Documentation of Sources</strong></a></li>
+  <li><a href="#data-collection-and-source" id="toc-data-collection-and-source" class="nav-link" data-scroll-target="#data-collection-and-source"><span class="header-section-number">2.1.1</span> <strong>Data Collection and Source</strong></a></li>
+  <li><a href="#data-format" id="toc-data-format" class="nav-link" data-scroll-target="#data-format"><span class="header-section-number">2.1.2</span> <strong>Data Format</strong></a></li>
+  <li><a href="#frequency-of-updates" id="toc-frequency-of-updates" class="nav-link" data-scroll-target="#frequency-of-updates"><span class="header-section-number">2.1.3</span> <strong>Frequency of Updates</strong></a></li>
+  <li><a href="#data-dimensions" id="toc-data-dimensions" class="nav-link" data-scroll-target="#data-dimensions"><span class="header-section-number">2.1.4</span> <strong>Data Dimensions</strong></a></li>
+  <li><a href="#data-issues-and-challenges" id="toc-data-issues-and-challenges" class="nav-link" data-scroll-target="#data-issues-and-challenges"><span class="header-section-number">2.1.5</span> <strong>Data Issues and Challenges</strong></a></li>
+  <li><a href="#data-import-plan" id="toc-data-import-plan" class="nav-link" data-scroll-target="#data-import-plan"><span class="header-section-number">2.1.6</span> <strong>Data Import Plan</strong></a></li>
+  <li><a href="#documentation-of-sources" id="toc-documentation-of-sources" class="nav-link" data-scroll-target="#documentation-of-sources"><span class="header-section-number">2.1.7</span> <strong>Documentation of Sources</strong></a></li>
   </ul></li>
   <li><a href="#missing-value-analysis" id="toc-missing-value-analysis" class="nav-link" data-scroll-target="#missing-value-analysis"><span class="header-section-number">2.2</span> Missing value analysis</a></li>
   </ul>
@@ -188,7 +222,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="description" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="description"><span class="header-section-number">2.1</span> Description</h2>
 <section id="data-collection-and-source" class="level3" data-number="2.1.1">
-<h3 data-number="2.1.1" class="anchored" data-anchor-id="data-collection-and-source"><span class="header-section-number">2.1.1</span> <strong>1. Data Collection and Source</strong></h3>
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="data-collection-and-source"><span class="header-section-number">2.1.1</span> <strong>Data Collection and Source</strong></h3>
 <ul>
 <li><p><strong>Collected By</strong>: This data is collected by the Office of Foreign Labor Certification (OFLC) under the U.S. Department of Labor.</p></li>
 <li><p><strong>How Data is Collected</strong>:</p>
@@ -200,12 +234,13 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><p>This dataset is publicly available via the OFLC website and is distributed in Excel (.xlsx) format.</p></li>
 <li><p>Download link for historical data: https://www.dol.gov/sites/dolgov/files/ETA/oflc/pdfs/H-1B_Disclosure_Data_FY17.xlsx</p></li>
+<li><p>Dataset fields description: <a href="https://www.dol.gov/sites/dolgov/files/ETA/oflc/pdfs/H-1B_FY17_Record_Layout.pdf" class="uri">https://www.dol.gov/sites/dolgov/files/ETA/oflc/pdfs/H-1B_FY17_Record_Layout.pdf</a></p></li>
 </ul></li>
 </ul>
 <hr>
 </section>
 <section id="data-format" class="level3" data-number="2.1.2">
-<h3 data-number="2.1.2" class="anchored" data-anchor-id="data-format"><span class="header-section-number">2.1.2</span> <strong>2. Data Format</strong></h3>
+<h3 data-number="2.1.2" class="anchored" data-anchor-id="data-format"><span class="header-section-number">2.1.2</span> <strong>Data Format</strong></h3>
 <ul>
 <li><p><strong>File Type</strong>: Microsoft Excel (.xlsx).</p></li>
 <li><p><strong>Organization</strong>:</p>
@@ -222,7 +257,7 @@ ul.task-list li input[type="checkbox"] {
 <hr>
 </section>
 <section id="frequency-of-updates" class="level3" data-number="2.1.3">
-<h3 data-number="2.1.3" class="anchored" data-anchor-id="frequency-of-updates"><span class="header-section-number">2.1.3</span> <strong>3. Frequency of Updates</strong></h3>
+<h3 data-number="2.1.3" class="anchored" data-anchor-id="frequency-of-updates"><span class="header-section-number">2.1.3</span> <strong>Frequency of Updates</strong></h3>
 <ul>
 <li><p>The data is updated quarterly and annually.</p></li>
 <li><p>The H1-B 2017 dataset specifically covers cases for the fiscal year 2017 (October 1, 2016 – September 30, 2017) and will not receive further updates.</p></li>
@@ -230,7 +265,7 @@ ul.task-list li input[type="checkbox"] {
 <hr>
 </section>
 <section id="data-dimensions" class="level3" data-number="2.1.4">
-<h3 data-number="2.1.4" class="anchored" data-anchor-id="data-dimensions"><span class="header-section-number">2.1.4</span> <strong>4. Data Dimensions</strong></h3>
+<h3 data-number="2.1.4" class="anchored" data-anchor-id="data-dimensions"><span class="header-section-number">2.1.4</span> <strong>Data Dimensions</strong></h3>
 <ul>
 <li><p><strong>Number of Records</strong>: Depends on the fiscal year’s total applications, in this case its 624651 rows.</p></li>
 <li><p><strong>Columns/Attributes</strong>: 52 columns.</p></li>
@@ -238,7 +273,7 @@ ul.task-list li input[type="checkbox"] {
 <hr>
 </section>
 <section id="data-issues-and-challenges" class="level3" data-number="2.1.5">
-<h3 data-number="2.1.5" class="anchored" data-anchor-id="data-issues-and-challenges"><span class="header-section-number">2.1.5</span> <strong>5. Data Issues and Challenges</strong></h3>
+<h3 data-number="2.1.5" class="anchored" data-anchor-id="data-issues-and-challenges"><span class="header-section-number">2.1.5</span> <strong>Data Issues and Challenges</strong></h3>
 <ul>
 <li><p><strong>Known Issues</strong>:</p>
 <ul>
@@ -250,14 +285,14 @@ ul.task-list li input[type="checkbox"] {
 <hr>
 </section>
 <section id="data-import-plan" class="level3" data-number="2.1.6">
-<h3 data-number="2.1.6" class="anchored" data-anchor-id="data-import-plan"><span class="header-section-number">2.1.6</span> <strong>6. Data Import Plan</strong></h3>
+<h3 data-number="2.1.6" class="anchored" data-anchor-id="data-import-plan"><span class="header-section-number">2.1.6</span> <strong>Data Import Plan</strong></h3>
 <ul>
 <li><strong>Download</strong>: The data from the OFLC website will be downloaded using a R script as an xlsx file.</li>
 </ul>
 <hr>
 </section>
 <section id="documentation-of-sources" class="level3" data-number="2.1.7">
-<h3 data-number="2.1.7" class="anchored" data-anchor-id="documentation-of-sources"><span class="header-section-number">2.1.7</span> <strong>7. Documentation of Sources</strong></h3>
+<h3 data-number="2.1.7" class="anchored" data-anchor-id="documentation-of-sources"><span class="header-section-number">2.1.7</span> <strong>Documentation of Sources</strong></h3>
 <ul>
 <li><p>Primary Source: <strong>U.S. Department of Labor - Office of Foreign Labor Certification H-1B Disclosure Data</strong></p>
 <ul>
@@ -269,6 +304,224 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="missing-value-analysis" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="missing-value-analysis"><span class="header-section-number">2.2</span> Missing value analysis</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load required libraries</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#if (!require("readxl")) install.packages("readxl", dependencies = TRUE)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#if (!require("dplyr")) install.packages("dplyr", dependencies = TRUE)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The URL for the H1-B 2017 dataset</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://www.dol.gov/sites/dolgov/files/ETA/oflc/pdfs/H-1B_Disclosure_Data_FY17.xlsx"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># The destination of  file path for the Excel file</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="st">"H-1B_Disclosure_Data_FY17.xlsx"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Download the file</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(url, <span class="at">destfile =</span> file_path, <span class="at">mode =</span> <span class="st">"wb"</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>h1b_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#head(h1b_data)</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(h1b_data, <span class="at">file =</span> <span class="st">"H1B_2017_cleaned.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the data</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#h1b_data &lt;- read_csv("H1B_2017_cleaned.csv")</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate missing value counts</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>missing_values_summary <span class="ot">&lt;-</span> <span class="fu">colSums</span>(<span class="fu">is.na</span>(h1b_data))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>missing_columns <span class="ot">&lt;-</span> missing_values_summary[missing_values_summary <span class="sc">&gt;</span> <span class="dv">0</span>]</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>missing_table <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">Column =</span> <span class="fu">names</span>(missing_columns),</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">MissingCount =</span> <span class="fu">as.numeric</span>(missing_columns)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>sorted_table <span class="ot">&lt;-</span> missing_table <span class="sc">%&gt;%</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(MissingCount))</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(sorted_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                        Column MissingCount
+1   PUBLIC_DISCLOSURE_LOCATION       624650
+2           EMPLOYER_PHONE_EXT       587242
+3           ORIGINAL_CERT_DATE       574942
+4            EMPLOYER_PROVINCE       478203
+5        EMPLOYER_BUSINESS_DBA       424769
+6              LABOR_CON_AGREE       379675
+7         AGENT_ATTORNEY_STATE       288641
+8          AGENT_ATTORNEY_CITY       273306
+9               EMPLOYER_PHONE        96508
+10            EMPLOYER_COUNTRY        96507
+11 AGENT_REPRESENTING_EMPLOYER        96506
+12               PW_WAGE_LEVEL        96503
+13                 SUPPORT_H1B        43767
+14            WILLFUL_VIOLATOR        13745
+15               H1B_DEPENDENT        13742
+16             PW_SOURCE_OTHER         3331
+17              PW_UNIT_OF_PAY           46
+18                   PW_SOURCE           46
+19              PW_SOURCE_YEAR           45
+20         EMPLOYMENT_END_DATE           30
+21       EMPLOYMENT_START_DATE           29
+22              EMPLOYER_STATE           18
+23              WORKSITE_STATE            9
+24            WAGE_UNIT_OF_PAY            8
+25                  NAICS_CODE            7
+26        EMPLOYER_POSTAL_CODE            6
+27               EMPLOYER_NAME            5
+28            EMPLOYER_ADDRESS            5
+29               EMPLOYER_CITY            5
+30          FULL_TIME_POSITION            5
+31        WORKSITE_POSTAL_CODE            5
+32               WORKSITE_CITY            4
+33             WORKSITE_COUNTY            4
+34                   JOB_TITLE            2
+35                    SOC_CODE            2
+36                    SOC_NAME            2
+37             PREVAILING_WAGE            1
+38         WAGE_RATE_OF_PAY_TO            1</code></pre>
+</div>
+</div>
+<p>The above table shows the missing values in each column respectively. We can see that missing values in some of the rows is huge (some of them are nearly empty). For example, Public Discolsure location is completely empty. It is possible that these values are not mandatory while filling the H-1B application, therefore leading to lot of missing information.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting the percentage of missing values per column, sorted by descending missing percentage</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>missing_summary <span class="ot">&lt;-</span> <span class="fu">colSums</span>(<span class="fu">is.na</span>(h1b_data)) <span class="sc">/</span> <span class="fu">nrow</span>(h1b_data) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>missing_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Column =</span> <span class="fu">names</span>(missing_summary), <span class="at">MissingPercentage =</span> missing_summary)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(missing_df, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(Column, MissingPercentage), <span class="at">y =</span> MissingPercentage)) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">fill =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Percentage of Missing Values per Column"</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Columns"</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Missing Percentage (%)"</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The above horizontal bar graph gives a relative view of missing values in all the columns of the dataset. Missing values can, of course, complicate the analysis; however, in our case, the columns with a high number of missing values are not critical to our primary objectives. The data in these columns—such as PUBLIC_DISCLOSURE_LOCATION, EMPLOYER_PHONE_EXT, and EMPLOYER_PROVINCE—serve as supporting information rather than core data required for analysis.</p>
+<p>For example, columns like PUBLIC_DISCLOSURE_LOCATION only provides metadata about the file’s storage location, which is not directly related to analyzing H-1B visa trends or employer statistics. Similarly, fields such as EMPLOYER_PHONE_EXT and EMPLOYER_PROVINCE primarily address contact details, which are not relevant for our analysis.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>sampled_data <span class="ot">&lt;-</span> h1b_data[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(h1b_data), <span class="dv">5000</span>), ]</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>missing_long <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">is.na</span>(sampled_data)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"Column"</span>, <span class="at">values_to =</span> <span class="st">"IsMissing"</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>missing_long <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="at">RowIndex =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(sampled_data), <span class="at">times =</span> <span class="fu">ncol</span>(sampled_data)), missing_long)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting heatmap of missing data</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(missing_long, <span class="fu">aes</span>(<span class="at">x =</span> Column, <span class="at">y =</span> RowIndex, <span class="at">fill =</span> IsMissing)) <span class="sc">+</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"FALSE"</span> <span class="ot">=</span> <span class="st">"white"</span>, <span class="st">"TRUE"</span> <span class="ot">=</span> <span class="st">"red"</span>), <span class="at">name =</span> <span class="st">"Missing"</span>) <span class="sc">+</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Heatmap of Missing Data (Sampled Rows)"</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Columns"</span>,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Row Index"</span>) <span class="sc">+</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The above missing value heatmap shows that missing data is concentrated only in certain columns. The rest of the columns have little to no missing data. This helps us streamline the data cleaning process.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Group missingness by CASE_STATUS and calculate the average missing count</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>grouped_missing <span class="ot">&lt;-</span> h1b_data <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">MissingCount =</span> <span class="fu">rowSums</span>(<span class="fu">is.na</span>(.))) <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CASE_STATUS) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">AverageMissing =</span> <span class="fu">mean</span>(MissingCount)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(AverageMissing)) <span class="co"># Optional: Sort for better visualization</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting grouped missingness</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(grouped_missing, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(CASE_STATUS, <span class="sc">-</span>AverageMissing), <span class="at">y =</span> AverageMissing)) <span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">fill =</span> <span class="st">"orange"</span>) <span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Average Missing Values by CASE STATUS"</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"CASE STATUS"</span>,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Average Missing Count"</span>) <span class="sc">+</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This chart visualizes the average count of missing values for different categories of the column CASE_STATUS which represents the status of H-1B visa application.</p>
+<p>The average missing values are similar across all statuses indicating no major variation in the amount of missing data among different application statuses. This implies that to handle the missing data, this graph shows that removing missing values wont introduce bias towards a specific case status.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>numeric_data <span class="ot">&lt;-</span> h1b_data <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select_if</span>(is.numeric)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>standardized_data <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">scale</span>(numeric_data))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>) </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>subset_data <span class="ot">&lt;-</span> standardized_data[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(standardized_data), <span class="dv">1000</span>), ]</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>subset_data <span class="ot">&lt;-</span> subset_data <span class="sc">%&gt;%</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">RowIndex =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(.)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>RowIndex, <span class="at">names_to =</span> <span class="st">"Variable"</span>, <span class="at">values_to =</span> <span class="st">"Value"</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(subset_data, <span class="fu">aes</span>(<span class="at">x =</span> Variable, <span class="at">y =</span> RowIndex, <span class="at">fill =</span> Value)) <span class="sc">+</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"blue"</span>, <span class="at">mid =</span> <span class="st">"white"</span>, <span class="at">high =</span> <span class="st">"black"</span>, <span class="at">midpoint =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Heatmap of Standardized Variables (Subset of Rows)"</span>,</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Variable"</span>,</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Row Index"</span>,</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Standardized Value"</span>) <span class="sc">+</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="1920"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The heatmap displayed is a visualization of standardised values in the dataset for missing values analysis. No visible pattern was found on the plotting of this graph indicating that there is no unique relationship between missing values of the columns. Additionally we also observe a fading effect when we take large number of rows. This is due to data being more homogenous, causing the the standarised values to cluster closer to 0. Some of the columns are completely white, indicating high number of missing values in those columns.</p>
 
 
 </section>

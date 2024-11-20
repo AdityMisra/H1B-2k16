@@ -2,7 +2,7 @@
 
 ## Description
 
-### **1. Data Collection and Source**
+### **Data Collection and Source**
 
 -   **Collected By**: This data is collected by the Office of Foreign Labor Certification (OFLC) under the U.S. Department of Labor.
 
@@ -22,7 +22,7 @@
 
 ------------------------------------------------------------------------
 
-### **2. Data Format**
+### **Data Format**
 
 -   **File Type**: Microsoft Excel (.xlsx).
 
@@ -40,7 +40,7 @@
 
 ------------------------------------------------------------------------
 
-### **3. Frequency of Updates**
+### **Frequency of Updates**
 
 -   The data is updated quarterly and annually.
 
@@ -48,7 +48,7 @@
 
 ------------------------------------------------------------------------
 
-### **4. Data Dimensions**
+### **Data Dimensions**
 
 -   **Number of Records**: Depends on the fiscal year's total applications, in this case its 624651 rows.
 
@@ -56,7 +56,7 @@
 
 ------------------------------------------------------------------------
 
-### **5. Data Issues and Challenges**
+### **Data Issues and Challenges**
 
 -   **Known Issues**:
 
@@ -68,13 +68,13 @@
 
 ------------------------------------------------------------------------
 
-### **6. Data Import Plan**
+### **Data Import Plan**
 
 -   **Download**: The data from the OFLC website will be downloaded using a R script as an xlsx file.
 
 ------------------------------------------------------------------------
 
-### **7. Documentation of Sources**
+### **Documentation of Sources**
 
 -   Primary Source: **U.S. Department of Labor - Office of Foreign Labor Certification H-1B Disclosure Data**
 
@@ -86,10 +86,11 @@
 
 ```{r}
 # Load required libraries
-if (!require("readxl")) install.packages("readxl", dependencies = TRUE)
-if (!require("dplyr")) install.packages("dplyr", dependencies = TRUE)
+#if (!require("readxl")) install.packages("readxl", dependencies = TRUE)
+#if (!require("dplyr")) install.packages("dplyr", dependencies = TRUE)
 
 library(readxl)
+library(readr)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
@@ -97,69 +98,50 @@ library(tidyverse)
 ```
 
 ```{r}
-# Set the URL for the H1-B 2017 dataset
+# The URL for the H1-B 2017 dataset
 url <- "https://www.dol.gov/sites/dolgov/files/ETA/oflc/pdfs/H-1B_Disclosure_Data_FY17.xlsx"
 
-# Specify the destination file path for the downloaded Excel file
+# The destination of  file path for the Excel file
 file_path <- "H-1B_Disclosure_Data_FY17.xlsx"
 
 # Download the file
 download.file(url, destfile = file_path, mode = "wb")
 
-# Read the Excel file into a data frame
 h1b_data <- read_excel(file_path)
 
-# Display the structure of the dataset
-head(h1b_data)
+#head(h1b_data)
 
-# Save a cleaned version (if needed)
 write.csv(h1b_data, file = "H1B_2017_cleaned.csv", row.names = FALSE)
-
-
 ```
 
 ```{r}
-library(readr)
-library(dplyr)
-
 # Read the data
-h1b_data <- read_csv("H1B_2017_cleaned.csv")
+#h1b_data <- read_csv("H1B_2017_cleaned.csv")
 
 # Calculate missing value counts
 missing_values_summary <- colSums(is.na(h1b_data))
 
-# Filter only columns with missing values
 missing_columns <- missing_values_summary[missing_values_summary > 0]
 
-# Create a data frame with clear column names
 missing_table <- data.frame(
   Column = names(missing_columns),
-  MissingCount = as.numeric(missing_columns) # Ensure the counts are numeric
+  MissingCount = as.numeric(missing_columns)
 )
 
-# Display the table
-cat("Columns with Missing Values and Their Counts:\n")
-print(missing_table)
-
-# (Optional) Arrange and show as sorted table by missing counts
 sorted_table <- missing_table %>%
   arrange(desc(MissingCount))
 
-cat("\nSorted Columns by Missing Values (Descending Order):\n")
 print(sorted_table)
-
-
-
 ```
 
 The above table shows the missing values in each column respectively. We can see that missing values in some of the rows is huge (some of them are nearly empty). For example, Public Discolsure location is completely empty. It is possible that these values are not mandatory while filling the H-1B application, therefore leading to lot of missing information.
 
 ```{r, fig.width=8, fig.height=8}
 
-# Calculate missing value percentage for each column
+# Plotting the percentage of missing values per column, sorted by descending missing percentage
 missing_summary <- colSums(is.na(h1b_data)) / nrow(h1b_data) * 100
 missing_df <- data.frame(Column = names(missing_summary), MissingPercentage = missing_summary)
-# Plot the percentage of missing values per column, sorted by descending missing percentage
+
 ggplot(missing_df, aes(x = reorder(Column, MissingPercentage), y = MissingPercentage)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   coord_flip() +
@@ -185,7 +167,7 @@ missing_long <- as.data.frame(is.na(sampled_data)) %>%
 
 missing_long <- cbind(RowIndex = rep(1:nrow(sampled_data), times = ncol(sampled_data)), missing_long)
 
-# Plot heatmap of missing data
+# Plotting heatmap of missing data
 ggplot(missing_long, aes(x = Column, y = RowIndex, fill = IsMissing)) +
   geom_tile() +
   scale_fill_manual(values = c("FALSE" = "white", "TRUE" = "red"), name = "Missing") +
@@ -206,7 +188,7 @@ grouped_missing <- h1b_data %>%
   summarise(AverageMissing = mean(MissingCount)) %>%
   arrange(desc(AverageMissing)) # Optional: Sort for better visualization
 
-# Plot grouped missingness
+# Plotting grouped missingness
 ggplot(grouped_missing, aes(x = reorder(CASE_STATUS, -AverageMissing), y = AverageMissing)) +
   geom_bar(stat = "identity", fill = "orange") +
   labs(title = "Average Missing Values by CASE STATUS",
@@ -228,7 +210,7 @@ numeric_data <- h1b_data %>%
 
 standardized_data <- as.data.frame(scale(numeric_data))
 
-set.seed(42) # For reproducibility
+set.seed(42) 
 subset_data <- standardized_data[sample(1:nrow(standardized_data), 1000), ]
 
 subset_data <- subset_data %>%
@@ -248,4 +230,4 @@ ggplot(subset_data, aes(x = Variable, y = RowIndex, fill = Value)) +
 
 ```
 
-The heatmap displayed is a visualization of standardised values in the dataset for missing values analysis. No visible pattern was found on the plotting of  this graph indicating that there is no unique relationship between missing values of the columns. Additionally we also observe a fading effect when we take large number of rows. This is due to data being more homogenous, causing the the standarised values to cluster closer to 0. Some of the columns are completely white, indicating high number of missing values in those columns. 
+The heatmap displayed is a visualization of standardised values in the dataset for missing values analysis. No visible pattern was found on the plotting of this graph indicating that there is no unique relationship between missing values of the columns. Additionally we also observe a fading effect when we take large number of rows. This is due to data being more homogenous, causing the the standarised values to cluster closer to 0. Some of the columns are completely white, indicating high number of missing values in those columns.
