@@ -96,7 +96,9 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">H1B 2K17 Analysis</a> 
+      <a href="./">
+      H1B 2K17 Analysis
+      </a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/AdityMisra/H1B-2k16/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
 </div>
@@ -174,16 +176,32 @@ ul.task-list li input[type="checkbox"] {
     font-family: sans-serif;
   }
 </style>
+<label for="stateDropdown">Select State:</label>
+<select id="stateDropdown">
+</select>
+<button id="addStateButton">Add State</button>
+<button id="removeStateButton">Remove State</button>
+
+<div id="chart"></div>
+<div class="tooltip" style="visibility: hidden;"></div>
 <div id="plot">
 
 </div>
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 <script src="scripts/myscript.js"></script>
-
-
+<script src="https://d3js.org/d3.v7.min.js" <="" script="">
+<div id="quarto-navigation-envelope" class="hidden">
+<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar-title">H1B 2K17 Analysis</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-navbar-title">H1B 2K17 Analysis</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-next"><span class="chapter-number">5</span>  <span class="chapter-title">Conclusion</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-prev"><span class="chapter-number">3</span>  <span class="chapter-title">Results</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/index.html&lt;span-class=&#39;chapter-number&#39;&gt;1&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Introduction&lt;/span&gt;"><span class="chapter-number">1</span>  <span class="chapter-title">Introduction</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/data.html&lt;span-class=&#39;chapter-number&#39;&gt;2&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Data&lt;/span&gt;"><span class="chapter-number">2</span>  <span class="chapter-title">Data</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/results.html&lt;span-class=&#39;chapter-number&#39;&gt;3&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Results&lt;/span&gt;"><span class="chapter-number">3</span>  <span class="chapter-title">Results</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/d3graph.html&lt;span-class=&#39;chapter-number&#39;&gt;4&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Interactive-graph&lt;/span&gt;"><span class="chapter-number">4</span>  <span class="chapter-title">Interactive graph</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/conclusion.html&lt;span-class=&#39;chapter-number&#39;&gt;5&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Conclusion&lt;/span&gt;"><span class="chapter-number">5</span>  <span class="chapter-title">Conclusion</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-breadcrumbs-&lt;span-class=&#39;chapter-number&#39;&gt;4&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Interactive-graph&lt;/span&gt;"><span class="chapter-number">4</span>  <span class="chapter-title">Interactive graph</span></span></p>
+<div class="hidden quarto-markdown-envelope-contents" data-render-id="footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+</div>
+<div id="quarto-meta-markdown" class="hidden">
+<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-metatitle"><span class="chapter-number">4</span>  <span class="chapter-title">Interactive graph</span> – H1B 2K17 Analysis</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-twittercardtitle"><span class="chapter-number">4</span>  <span class="chapter-title">Interactive graph</span> – H1B 2K17 Analysis</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-ogcardtitle"><span class="chapter-number">4</span>  <span class="chapter-title">Interactive graph</span> – H1B 2K17 Analysis</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-metasitename">H1B 2K17 Analysis</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-twittercarddesc"></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-ogcardddesc"></span></p>
+</div>
 
 </main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+<script id = "quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -615,7 +633,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>
   </div>
 </nav>
-</div> <!-- /content -->
+</main></div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
@@ -625,8 +643,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       &nbsp;
     <div class="toc-actions"><ul><li><a href="https://github.com/AdityMisra/H1B-2k16/edit/main/d3graph.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/AdityMisra/H1B-2k16/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
-<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
-</div>
+      <div class="footer-contents">This book was built with <a href="https://quarto.org/">Quarto</a>.
+</div>  
+    </div>
   </div>
 </footer>
 

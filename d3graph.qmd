@@ -1,13 +1,32 @@
 # Interactive graph
 
+```{=html}
 <style>
   * {
     font-family: sans-serif;
   }
-</style> 
+</style>
+<label for="stateDropdown">Select State:</label>
+<select id="stateDropdown">
+</select>
+<button id="addStateButton">Add State</button>
+<button id="removeStateButton">Remove State</button>
 
-<div id="plot">
-</div>
+<div id="chart"></div>
+<div class="tooltip" style="visibility: hidden;"></div>
+```
 
+::: {#plot}
+:::
+
+```{=html}
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+```
+
+```{=html}
 <script src="scripts/myscript.js"></script>
+```
+
+```{=html}
+<script src="https://d3js.org/d3.v7.min.js"</script>
+```

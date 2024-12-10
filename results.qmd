@@ -233,7 +233,7 @@ ggplot(h1b_filtered, aes(x = PREVAILING_WAGE, y = WAGE_RATE_OF_PAY_FROM, color =
 
 ```
 
-```{r, fig.width=16, fig.height=10}
+```{r}
 # Load necessary libraries
 library(dplyr)
 library(ggplot2)
@@ -291,7 +291,7 @@ ggplot(facet_data, aes(x = EMPLOYMENT_TYPE, y = percentage, fill = EMPLOYMENT_TY
 
 ```
 
-```{r, fig.width=16, fig.height=12}
+```{r, fig.width=8, fig.height=8}
 
 # Filter and map industries
 h1b_filtered <- data %>%
@@ -323,7 +323,7 @@ ggplot(h1b_filtered, aes(x = Industry, y = PREVAILING_WAGE)) +
 
 ```
 
-```{r, fig.width=20, fig.height=12}
+```{r, fig.width=16, fig.height=8}
 # Prepare the data
 mosaic_data <- filtered_data %>%
   filter(!is.na(PREVAILING_WAGE), !is.na(CASE_STATUS)) %>%
@@ -387,7 +387,7 @@ ggplot(scatter_data, aes(x = Avg_Prevailing_Wage, y = Denial_Rate)) +
   )
 ```
 
-```{r, fig.width=20, fig.height=16}
+```{r, fig.width=18, fig.height=10}
 library(ggplot2)
 library(ggalluvial)
 library(dplyr)

@@ -194,6 +194,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#documentation-of-sources" id="toc-documentation-of-sources" class="nav-link" data-scroll-target="#documentation-of-sources"><span class="header-section-number">2.1.7</span> <strong>Documentation of Sources</strong></a></li>
   </ul></li>
   <li><a href="#missing-value-analysis" id="toc-missing-value-analysis" class="nav-link" data-scroll-target="#missing-value-analysis"><span class="header-section-number">2.2</span> Missing value analysis</a></li>
+  <li><a href="#data-pre-processing" id="toc-data-pre-processing" class="nav-link" data-scroll-target="#data-pre-processing"><span class="header-section-number">2.3</span> <strong>Data Pre-processing</strong></a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/AdityMisra/H1B-2k16/edit/main/data.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/AdityMisra/H1B-2k16/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -522,6 +523,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The heatmap displayed is a visualization of standardised values in the dataset for missing values analysis. No visible pattern was found on the plotting of this graph indicating that there is no unique relationship between missing values of the columns. Additionally we also observe a fading effect when we take large number of rows. This is due to data being more homogenous, causing the the standarised values to cluster closer to 0. Some of the columns are completely white, indicating high number of missing values in those columns.</p>
+</section>
+<section id="data-pre-processing" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="data-pre-processing"><span class="header-section-number">2.3</span> <strong>Data Pre-processing</strong></h2>
+<p>Based on our results above we have decided to remove following columns from our data-set as they are either not useful to us or have a lot of missing values.</p>
+<p>The columns that we are dropping:</p>
+<p>EMPLOYER_BUSINESS_DBA, EMPLOYER_ADDRESS, EMPLOYER_PROVINCE, EMPLOYER_PHONE, EMPLOYER_PHONE_EXT, ORIGINAL_CERT_DATE, AGENT_REPRESENTING_EMPLOYER, AGENT_ATTORNEY_NAME, AGENT_ATTORNEY_CITY, AGENT_ATTORNEY_STATE, PUBLIC_DISCLOSURE_LOCATION, LABOR_CON_AGREE.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>columns_to_remove <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"EMPLOYER_BUSINESS_DBA"</span>, </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"EMPLOYER_ADDRESS"</span>, </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"EMPLOYER_PROVINCE"</span>, </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"EMPLOYER_PHONE"</span>, </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"EMPLOYER_PHONE_EXT"</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ORIGINAL_CERT_DATE"</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"AGENT_REPRESENTING_EMPLOYER"</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"AGENT_ATTORNEY_NAME"</span>, </span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"AGENT_ATTORNEY_CITY"</span>, </span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"AGENT_ATTORNEY_STATE"</span>, </span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PUBLIC_DISCLOSURE_LOCATION"</span>, </span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"LABOR_CON_AGREE"</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Removing the specified columns</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>h1b_data_cleaned <span class="ot">&lt;-</span> h1b_data <span class="sc">|&gt;</span> </span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">all_of</span>(columns_to_remove))</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(h1b_data_cleaned, <span class="at">file =</span> <span class="st">"H1B_2017_cleaned.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co">#head(h1b_data_cleaned)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 
 
 </section>
