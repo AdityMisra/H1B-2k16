@@ -1,1 +1,442 @@
 # Results
+
+```{r}
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+library(scales)
+library(forcats)
+library(RColorBrewer)
+# Load the dataset
+data <- read.csv("H1B_2017_cleaned.csv")
+```
+
+```{r}
+# Convert DECISION_DATE to date format
+data$DECISION_DATE <- as.Date(data$DECISION_DATE)
+
+# Define quarters
+data$Quarter <- cut(data$DECISION_DATE,
+  breaks = as.Date(c("2016-10-01", "2016-12-31", "2017-03-31", "2017-06-30", "2017-09-30")),
+  labels = c("Q4 2016", "Q1 2017", "Q2 2017", "Q3 2017"),
+  right = TRUE
+)
+
+# Filter data to include only the defined quarters
+filtered_data <- data %>% filter(!is.na(Quarter))
+
+# Group and count case statuses by quarter
+status_counts <- filtered_data %>%
+  group_by(CASE_STATUS) %>%
+  mutate(Total = n()) %>%  # Calculate total count for each CASE_STATUS
+  ungroup() %>%
+  group_by(Quarter, CASE_STATUS) %>%
+  summarise(Count = n(), .groups = "drop")
+
+# Reorder CASE_STATUS by the total counts
+status_counts$CASE_STATUS <- fct_rev(fct_reorder(status_counts$CASE_STATUS, status_counts$Count, .desc = TRUE))
+# Define custom colors for each CASE_STATUS
+custom_colors <- c(
+  "DENIED" = "red",
+  "WITHDRAWN" = "blue",
+  "CERTIFIED-WITHDRAWN" = "#facc43",
+  "CERTIFIED" = "#299643"
+)
+
+# Create the bar graph with custom colors
+ggplot(status_counts, aes(x = Quarter, y = Count, fill = CASE_STATUS)) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_fill_manual(values = custom_colors) +  # Apply custom colors
+  labs(
+    title = "H1B Case Status Distribution by Quarter (2016-2017)",
+    x = "Quarter",
+    y = "Number of Cases",
+    fill = "Case Status"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+  scale_y_continuous(labels = comma)
+```
+
+```{r, fig.width=12, fig.height=8}
+# NAICS Code to Industry Name Mapping
+naics_to_industry <- c(
+  "541211" = "Accountants",
+  "541330" = "Engineering Services",
+  "54151" = "Computer Systems",
+  "541511" = "Programming Services",
+  "541512" = "Computer Design",
+  "541519" = "Other Computer Related Services",
+  "5416" = "Technical Consulting",
+  "54161" = "Management Consulting",
+  "541611" = "Administrative Management",
+  "611310" = "Education"
+)
+# Group and count case statuses by NAICS_CODE (Industry)
+industry_counts <- filtered_data %>%
+  group_by(NAICS_CODE, CASE_STATUS) %>%
+  summarise(Count = n(), .groups = "drop") %>%
+  group_by(NAICS_CODE) %>%
+  mutate(Total_Certified = sum(Count[CASE_STATUS == "CERTIFIED"])) %>%
+  ungroup()
+
+# Select the top 10 industries by "Certified" applications
+top_industries <- industry_counts %>%
+  filter(!is.na(NAICS_CODE)) %>%  # Remove NA industries
+  arrange(desc(Total_Certified)) %>%
+  distinct(NAICS_CODE, Total_Certified) %>%
+  slice_head(n = 10)
+
+# Filter the data to include only the top 10 industries
+top_industry_data <- industry_counts %>%
+  filter(NAICS_CODE %in% top_industries$NAICS_CODE)
+
+# Map the NAICS_CODE values to their corresponding Industry names
+top_industry_data$Industry_Name <- naics_to_industry[as.character(top_industry_data$NAICS_CODE)]
+
+# Print the unique pairs of NAICS_CODE and Industry_Name
+unique_industries <- unique(top_industry_data[, c("NAICS_CODE", "Industry_Name")])
+# Map NAICS_CODE values to corresponding Industry names
+top_industry_data$Industry_Name <- naics_to_industry[as.character(top_industry_data$NAICS_CODE)]
+
+# Create Cleveland dot plots faceted by CASE_STATUS
+ggplot(top_industry_data, aes(
+  x = Count,
+  y = reorder(Industry_Name, Total_Certified)  # Order by Total Certified
+)) +
+  geom_point(aes(color = CASE_STATUS), size = 3) +
+  facet_wrap(~ CASE_STATUS, scales = "free_x") +  # Facet by case status
+  scale_color_manual(values = custom_colors) +  # Use custom colors for CASE_STATUS
+  labs(
+    title = "Top 10 Industries by Applications (Faceted by Case Status)",
+    x = "Number of Applications",
+    y = "Industry",
+    color = "Case Status"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.y = element_text(size = 10),
+    axis.text.x = element_text(size = 8),
+    strip.text = element_text(size = 10, face = "bold"),
+    plot.title = element_text(size = 14, face = "bold")
+  )
+
+```
+
+```{r}
+filtered_data <- filtered_data %>%
+  mutate(
+    Period = ifelse(
+      DECISION_DATE < as.Date("2017-01-20"), 
+      "Pre-Trump (Oct 2016 - Jan 2017)", 
+      "Post-Trump (Jan 2017 - Sep 2017)"
+    )
+  )
+# Load US state boundaries
+us_states <- map_data("state")
+# Prepare state abbreviations to full names mapping
+state_abbrev <- data.frame(
+  EMPLOYER_STATE = state.abb,
+  region = tolower(state.name)
+)
+# Aggregate data by EMPLOYER_STATE and Period
+state_period_data <- filtered_data %>%
+  group_by(EMPLOYER_STATE, Period) %>%
+  summarise(
+    Total_Applications = n(),
+    Certified_Applications = sum(CASE_STATUS == "CERTIFIED", na.rm = TRUE)
+  ) %>%
+  ungroup()
+
+# Map state abbreviations to full names
+state_period_data <- state_period_data %>%
+  left_join(state_abbrev, by = "EMPLOYER_STATE")
+
+# Join with map data
+map_data <- us_states %>%
+  left_join(state_period_data, by = "region")
+# Plot pre-Trump map with "YlGnBu" color scheme
+ggplot(filter(map_data, Period == "Pre-Trump (Oct 2016 - Jan 2017)"),
+       aes(x = long, y = lat, group = group, fill = Total_Applications)) +
+  geom_polygon(color = "white") +
+  scale_fill_distiller(
+    palette = "YlGnBu",
+    name = "Total Applications",
+    direction = 1,
+    na.value = "grey50"
+  ) +
+  labs(
+    title = "H1B Applications by State (Pre-Trump Period)",
+    subtitle = "Oct 2016 - Jan 2017",
+    x = "",
+    y = ""
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank()
+  )
+
+# Plot post-Trump map with the same color scheme
+ggplot(filter(map_data, Period == "Post-Trump (Jan 2017 - Sep 2017)"),
+       aes(x = long, y = lat, group = group, fill = Total_Applications)) +
+  geom_polygon(color = "white") +
+  scale_fill_distiller(
+    palette = "YlGnBu",
+    name = "Total Applications",
+    direction = 1,
+    na.value = "grey50"
+  ) +
+  labs(
+    title = "H1B Applications by State (Post-Trump Period)",
+    subtitle = "Jan 2017 - Sep 2017",
+    x = "",
+    y = ""
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank()
+  )
+
+```
+
+```{r, fig.width=12, fig.height=8}
+# Load necessary librari
+
+# Filter out rows with missing or invalid wage data and exclude extreme outliers
+h1b_filtered <- data %>%
+  filter(!is.na(PREVAILING_WAGE) & !is.na(WAGE_RATE_OF_PAY_FROM) & 
+         PREVAILING_WAGE > 0 & WAGE_RATE_OF_PAY_FROM > 0) %>%
+  filter(PREVAILING_WAGE < quantile(PREVAILING_WAGE, 0.99))  # Exclude top 1% of values
+
+# Create a scatter plot with log scale
+ggplot(h1b_filtered, aes(x = PREVAILING_WAGE, y = WAGE_RATE_OF_PAY_FROM, color = CASE_STATUS)) +
+  geom_point(alpha = 0.6, size = 2) +  # Adjust transparency and point size
+  scale_x_continuous(labels = scales::comma) +  # Format x-axis with commas
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "Scatter Plot of Prevailing Wage vs. Wage Rate of Pay",
+    x = "Prevailing Wage (USD)",
+    y = "Wage Rate of Pay From (USD)",
+    color = "Case Status",
+    caption = "Source: H-1B 2017 Sample Dataset"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+
+```
+
+```{r, fig.width=16, fig.height=10}
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+
+# Load the dataset
+
+# Convert CASE_SUBMITTED to a date format
+data$CASE_SUBMITTED <- as.Date(data$CASE_SUBMITTED)
+
+# Filter data for the year 2016
+h1b_2016_17 <- data %>% filter(year(CASE_SUBMITTED) == 2016 | year(CASE_SUBMITTED) == 2017)
+
+# Aggregate data to count the number of applications submitted each day
+daily_applications <- h1b_2016_17 %>%
+  group_by(CASE_SUBMITTED) %>%
+  summarise(application_count = n())
+
+# Create a line plot
+ggplot(daily_applications, aes(x = CASE_SUBMITTED, y = application_count)) +
+  geom_line(color = "blue", size = 1) +
+  labs(
+    title = "Number of H-1B Applications Over Time (2016-17)",
+    x = "Date",
+    y = "Number of Applications"
+  ) +
+  scale_x_date(
+    date_breaks = "1 month",       # Set x-axis breaks to every month
+    date_labels = "%b %Y"         # Format labels as "Jan 2016", "Feb 2016", etc.
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1)  # Adjust label angle for readability
+  )
+```
+
+```{r, fig.width=16, fig.height=12}
+
+# Filter and map industries
+h1b_filtered <- data %>%
+  filter(!is.na(PREVAILING_WAGE) & PREVAILING_WAGE > 0 & !is.na(NAICS_CODE)) %>%
+  mutate(Industry = naics_to_industry[as.character(NAICS_CODE)]) %>% # Map NAICS_CODE to Industry
+  filter(!is.na(Industry))  # Keep only rows with valid industry names
+
+# Calculate the 99th percentile of prevailing wages
+wage_99th_percentile <- quantile(h1b_filtered$PREVAILING_WAGE, 0.99)
+
+# Filter out rows above the 99th percentile
+h1b_filtered <- h1b_filtered %>%
+  filter(PREVAILING_WAGE <= wage_99th_percentile)
+
+# Create a box plot
+ggplot(h1b_filtered, aes(x = Industry, y = PREVAILING_WAGE)) +
+  geom_boxplot(outlier.alpha = 0.5, fill = "lightblue") +
+  scale_y_log10(labels = scales::comma) +  # Log scale for wages to handle wide range
+  labs(
+    title = "Distribution of Prevailing Wages Across Top Industries (99th Percentile)",
+    x = "Industry",
+    y = "Prevailing Wage (USD, Log Scale)",
+    caption = "Source: H-1B 2017 Sample Dataset"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1)  # Rotate labels for clarity
+  )
+
+```
+
+```{r, fig.width=20, fig.height=12}
+library(ggmosaic)
+library(dplyr)
+
+# Prepare the data
+mosaic_data <- filtered_data %>%
+  filter(!is.na(PREVAILING_WAGE), !is.na(CASE_STATUS)) %>%
+  mutate(
+    Wage_Range = cut(
+      PREVAILING_WAGE,
+      breaks = c(0, 50000, 100000, 150000, 200000, Inf),
+      labels = c("<50k", "50k-100k", "100k-150k", "150k-200k", ">200k")
+    )
+  )
+
+# Create the mosaic plot
+ggplot(mosaic_data) +
+  geom_mosaic(aes(x = product(Wage_Range), fill = CASE_STATUS, weight = 1)) +
+  labs(
+    title = "Mosaic Plot of Wage Range and Case Status",
+    x = "Wage Range",
+    y = "Proportion",
+    fill = "Case Status"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r, fig.width=8, fig.height=6}
+
+
+# Prepare data: Calculate average prevailing wage and denial rate by state
+scatter_data <- filtered_data %>%
+  filter(!is.na(PREVAILING_WAGE), !is.na(CASE_STATUS)) %>%
+  group_by(EMPLOYER_STATE) %>%
+  summarise(
+    Avg_Prevailing_Wage = mean(PREVAILING_WAGE, na.rm = TRUE),
+    Total_Applications = n(),
+    Denial_Rate = sum(CASE_STATUS == "DENIED") / Total_Applications
+  ) %>%
+  filter(!is.na(Denial_Rate))
+
+# Create the scatter plot
+ggplot(scatter_data, aes(x = Avg_Prevailing_Wage, y = Denial_Rate)) +
+  geom_point(
+    aes(size = Total_Applications, color = Denial_Rate),
+    shape = 21,             # Hollow circles
+    fill = "white",         # White fill inside the circles
+    alpha = 0.7,            # Transparency for overlapping points
+    stroke = 0.5            # Border thickness for better visibility
+  ) +
+  geom_smooth(method = "lm", se = TRUE, color = "blue") +  # Add regression line
+  scale_color_gradient(low = "green", high = "red") +
+  scale_size(range = c(2, 10)) +
+  labs(
+    title = "Relationship Between Prevailing Wages and Denial Rate",
+    x = "Average Prevailing Wage",
+    y = "Denial Rate",
+    size = "Total Applications",
+    color = "Denial Rate"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "right",
+    axis.text = element_text(size = 10),
+    plot.title = element_text(size = 14, face = "bold")
+  )
+```
+
+```{r, fig.width=20, fig.height=16}
+library(ggplot2)
+library(ggalluvial)
+library(dplyr)
+
+# Prepare data for the alluvial diagram
+alluvial_data <- filtered_data %>%
+  filter(!is.na(EMPLOYER_NAME), !is.na(EMPLOYER_STATE), !is.na(CASE_STATUS)) %>%
+  group_by(EMPLOYER_NAME, EMPLOYER_STATE, CASE_STATUS) %>%
+  summarise(Count = n(), .groups = "drop") %>%
+  arrange(desc(Count))
+
+# Limit to top 10 employers for readability
+top_employers <- alluvial_data %>%
+  group_by(EMPLOYER_NAME) %>%
+  summarise(Total = sum(Count)) %>%
+  arrange(desc(Total)) %>%
+  slice_head(n = 10)
+
+filtered_alluvial_data <- alluvial_data %>%
+  filter(EMPLOYER_NAME %in% top_employers$EMPLOYER_NAME)
+
+# Create the alluvial diagram
+ggplot(filtered_alluvial_data,
+       aes(axis1 = EMPLOYER_NAME, axis2 = EMPLOYER_STATE, axis3 = CASE_STATUS, y = Count)) +
+  geom_alluvium(aes(fill = CASE_STATUS), alpha = 0.8) +
+  geom_stratum() +
+  geom_text(stat = "stratum", aes(label = after_stat(stratum)), size = 3, check_overlap = TRUE) +
+  scale_x_discrete(limits = c("Employers", "States", "Case Status")) +
+  scale_fill_brewer(palette = "Set3") +  # Use a visually distinct color palette
+  labs(
+    title = "Alluvial Diagram: Employer → State → Case Status",
+    x = "Stages",
+    y = "Number of Applications",
+    fill = "Case Status"
+  ) +
+  theme_minimal() +
+  theme(
+    
+    plot.title = element_text(size = 14, face = "bold")
+  )
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# Filter data for certified applications and remove missing wages
+certified_data <- filtered_data %>%
+  filter(CASE_STATUS == "CERTIFIED" & !is.na(PREVAILING_WAGE))
+
+# Create QQ plot for prevailing wages
+ggplot(certified_data, aes(sample = PREVAILING_WAGE)) +
+  stat_qq() +
+  stat_qq_line(color = "blue", linetype = "dashed") +
+  labs(
+    title = "QQ Plot of Prevailing Wages (Certified Applications)",
+    x = "Theoretical Quantiles",
+    y = "Sample Quantiles"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 14, face = "bold"),
+    axis.text = element_text(size = 10),
+    axis.title = element_text(size = 12)
+  )
+```
