@@ -7,6 +7,7 @@ library(dplyr)
 library(scales)
 library(forcats)
 library(RColorBrewer)
+library(ggmosaic)
 # Load the dataset
 data <- read.csv("H1B_2017_cleaned.csv")
 ```
@@ -221,8 +222,7 @@ ggplot(h1b_filtered, aes(x = PREVAILING_WAGE, y = WAGE_RATE_OF_PAY_FROM, color =
     title = "Scatter Plot of Prevailing Wage vs. Wage Rate of Pay",
     x = "Prevailing Wage (USD)",
     y = "Wage Rate of Pay From (USD)",
-    color = "Case Status",
-    caption = "Source: H-1B 2017 Sample Dataset"
+    color = "Case Status"
   ) +
   theme_minimal() +
   theme(
@@ -235,40 +235,60 @@ ggplot(h1b_filtered, aes(x = PREVAILING_WAGE, y = WAGE_RATE_OF_PAY_FROM, color =
 
 ```{r, fig.width=16, fig.height=10}
 # Load necessary libraries
-library(ggplot2)
 library(dplyr)
+library(ggplot2)
 library(lubridate)
 
-# Load the dataset
+# Prepare the data
+h1b_faceted <- data %>%
+  mutate(
+    Quarter = case_when(
+      ymd(CASE_SUBMITTED) >= ymd("2016-10-01") & ymd(CASE_SUBMITTED) <= ymd("2016-12-31") ~ "Oct-Dec 2016",
+      ymd(CASE_SUBMITTED) >= ymd("2017-01-01") & ymd(CASE_SUBMITTED) <= ymd("2017-03-31") ~ "Jan-Mar 2017",
+      ymd(CASE_SUBMITTED) >= ymd("2017-04-01") & ymd(CASE_SUBMITTED) <= ymd("2017-06-30") ~ "Apr-Jun 2017",
+      ymd(CASE_SUBMITTED) >= ymd("2017-07-01") & ymd(CASE_SUBMITTED) <= ymd("2017-09-30") ~ "Jul-Sep 2017",
+      TRUE ~ "Other"
+    ),
+    EMPLOYMENT_TYPE = case_when(
+      NEW_EMPLOYMENT == 1 ~ "New Employment",
+      CONTINUED_EMPLOYMENT == 1 ~ "Continued Employment",
+      TRUE ~ "Other"
+    )
+  ) %>%
+  filter(EMPLOYMENT_TYPE != "Other", Quarter != "Other")  # Keep only relevant rows
 
-# Convert CASE_SUBMITTED to a date format
-data$CASE_SUBMITTED <- as.Date(data$CASE_SUBMITTED)
+# Summarize counts for each quarter and employment type
+facet_data <- h1b_faceted %>%
+  group_by(Quarter, EMPLOYMENT_TYPE) %>%
+  summarise(count = n(), .groups = "drop")
 
-# Filter data for the year 2016
-h1b_2016_17 <- data %>% filter(year(CASE_SUBMITTED) == 2016 | year(CASE_SUBMITTED) == 2017)
+# Calculate percentage of applications per quarter
+facet_data <- facet_data %>%
+  group_by(Quarter) %>%
+  mutate(percentage = count / sum(count) * 100) %>%
+  ungroup()
 
-# Aggregate data to count the number of applications submitted each day
-daily_applications <- h1b_2016_17 %>%
-  group_by(CASE_SUBMITTED) %>%
-  summarise(application_count = n())
+# Order the Quarter factor to ensure proper display in the plot
+facet_data$Quarter <- factor(facet_data$Quarter, levels = c("Oct-Dec 2016", "Jan-Mar 2017", "Apr-Jun 2017", "Jul-Sep 2017"))
 
-# Create a line plot
-ggplot(daily_applications, aes(x = CASE_SUBMITTED, y = application_count)) +
-  geom_line(color = "blue", size = 1) +
+# Create the faceted bar chart with percentages
+ggplot(facet_data, aes(x = EMPLOYMENT_TYPE, y = percentage, fill = EMPLOYMENT_TYPE)) +
+  geom_bar(stat = "identity", position = "dodge") +
   labs(
-    title = "Number of H-1B Applications Over Time (2016-17)",
-    x = "Date",
-    y = "Number of Applications"
+    title = "Percentage of New vs. Continued Employment by Quarter (Oct 2016 - Sep 2017)",
+    x = "Employment Type",
+    y = "Percentage of Applications",
+    fill = "Employment Type"
   ) +
-  scale_x_date(
-    date_breaks = "1 month",       # Set x-axis breaks to every month
-    date_labels = "%b %Y"         # Format labels as "Jan 2016", "Feb 2016", etc.
-  ) +
-  theme_minimal() +
+  scale_fill_manual(values = c("New Employment" = "steelblue", "Continued Employment" = "darkorange")) +
+  theme_linedraw() +
   theme(
     plot.title = element_text(hjust = 0.5, face = "bold"),
-    axis.text.x = element_text(angle = 45, hjust = 1)  # Adjust label angle for readability
-  )
+    legend.position = "none",
+    axis.text.x = element_text(angle = 0, hjust = 0.5)  # Keep labels horizontal
+  ) +
+  facet_wrap(~ Quarter, ncol = 2, scales = 'free')
+
 ```
 
 ```{r, fig.width=16, fig.height=12}
@@ -293,8 +313,7 @@ ggplot(h1b_filtered, aes(x = Industry, y = PREVAILING_WAGE)) +
   labs(
     title = "Distribution of Prevailing Wages Across Top Industries (99th Percentile)",
     x = "Industry",
-    y = "Prevailing Wage (USD, Log Scale)",
-    caption = "Source: H-1B 2017 Sample Dataset"
+    y = "Prevailing Wage (USD, Log Scale)"
   ) +
   theme_minimal() +
   theme(
@@ -305,9 +324,6 @@ ggplot(h1b_filtered, aes(x = Industry, y = PREVAILING_WAGE)) +
 ```
 
 ```{r, fig.width=20, fig.height=12}
-library(ggmosaic)
-library(dplyr)
-
 # Prepare the data
 mosaic_data <- filtered_data %>%
   filter(!is.na(PREVAILING_WAGE), !is.na(CASE_STATUS)) %>%
@@ -333,8 +349,6 @@ ggplot(mosaic_data) +
 ```
 
 ```{r, fig.width=8, fig.height=6}
-
-
 # Prepare data: Calculate average prevailing wage and denial rate by state
 scatter_data <- filtered_data %>%
   filter(!is.na(PREVAILING_WAGE), !is.na(CASE_STATUS)) %>%
@@ -417,9 +431,6 @@ ggplot(filtered_alluvial_data,
 ```
 
 ```{r}
-library(ggplot2)
-library(dplyr)
-
 # Filter data for certified applications and remove missing wages
 certified_data <- filtered_data %>%
   filter(CASE_STATUS == "CERTIFIED" & !is.na(PREVAILING_WAGE))
