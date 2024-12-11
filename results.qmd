@@ -24,14 +24,14 @@ data$Quarter <- cut(data$DECISION_DATE,
 )
 
 # Filter data to include only the defined quarters
-filtered_data <- data %>% filter(!is.na(Quarter))
+filtered_data <- data |> filter(!is.na(Quarter))
 
 # Group and count case statuses by quarter
-status_counts <- filtered_data %>%
-  group_by(CASE_STATUS) %>%
-  mutate(Total = n()) %>%  # Calculate total count for each CASE_STATUS
-  ungroup() %>%
-  group_by(Quarter, CASE_STATUS) %>%
+status_counts <- filtered_data |>
+  group_by(CASE_STATUS) |>
+  mutate(Total = n()) |>  # Calculate total count for each CASE_STATUS
+  ungroup() |>
+  group_by(Quarter, CASE_STATUS) |>
   summarise(Count = n(), .groups = "drop")
 
 # Reorder CASE_STATUS by the total counts
@@ -58,7 +58,6 @@ ggplot(status_counts, aes(x = Quarter, y = Count, fill = CASE_STATUS)) +
   theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
   scale_y_continuous(labels = comma)
 ```
-Key Observations:
 
 Dominance of Certified Cases: Across all quarters shown (Q4 2016 through Q3 2017), the green bar representing CERTIFIED cases dominates the distribution. Even in the lowest volume quarters, the majority of processed cases were approved, suggesting a strong tendency towards granting H-1B visas when petitions are properly filed and meet criteria.
 
@@ -93,22 +92,22 @@ naics_to_industry <- c(
   "611310" = "Education"
 )
 # Group and count case statuses by NAICS_CODE (Industry)
-industry_counts <- filtered_data %>%
-  group_by(NAICS_CODE, CASE_STATUS) %>%
-  summarise(Count = n(), .groups = "drop") %>%
-  group_by(NAICS_CODE) %>%
-  mutate(Total_Certified = sum(Count[CASE_STATUS == "CERTIFIED"])) %>%
+industry_counts <- filtered_data |>
+  group_by(NAICS_CODE, CASE_STATUS) |>
+  summarise(Count = n(), .groups = "drop") |>
+  group_by(NAICS_CODE) |>
+  mutate(Total_Certified = sum(Count[CASE_STATUS == "CERTIFIED"])) |>
   ungroup()
 
 # Select the top 10 industries by "Certified" applications
-top_industries <- industry_counts %>%
-  filter(!is.na(NAICS_CODE)) %>%  # Remove NA industries
-  arrange(desc(Total_Certified)) %>%
-  distinct(NAICS_CODE, Total_Certified) %>%
+top_industries <- industry_counts |>
+  filter(!is.na(NAICS_CODE)) |>  # Remove NA industries
+  arrange(desc(Total_Certified)) |>
+  distinct(NAICS_CODE, Total_Certified) |>
   slice_head(n = 10)
 
 # Filter the data to include only the top 10 industries
-top_industry_data <- industry_counts %>%
+top_industry_data <- industry_counts |>
   filter(NAICS_CODE %in% top_industries$NAICS_CODE)
 
 # Map the NAICS_CODE values to their corresponding Industry names
@@ -143,7 +142,6 @@ ggplot(top_industry_data, aes(
 
 ```
 
-Key Observations
 	1.	Dominance of CERTIFIED Applications in Technology-Driven Industries: Programming Services and Computer Design industries account for the majority of CERTIFIED        applications, with Programming Services showing significantly higher numbers than other sectors. Other tech-related sectors, such as Technical Consulting and         Computer Systems, also have strong representation, highlighting the demand for tech talent.
 	    
 	    These industries have consistently relied on the H-1B program to fill skill gaps, particularly for specialized roles like software developers, systems analysts,       and IT consultants.
@@ -168,7 +166,7 @@ Key Observations
 
 ## H-1B Application and Regional patterns Amid the Transition
 ```{r}
-filtered_data <- filtered_data %>%
+filtered_data <- filtered_data |>
   mutate(
     Period = ifelse(
       DECISION_DATE < as.Date("2017-01-20"), 
@@ -184,20 +182,20 @@ state_abbrev <- data.frame(
   region = tolower(state.name)
 )
 # Aggregate data by EMPLOYER_STATE and Period
-state_period_data <- filtered_data %>%
-  group_by(EMPLOYER_STATE, Period) %>%
+state_period_data <- filtered_data |>
+  group_by(EMPLOYER_STATE, Period) |>
   summarise(
     Total_Applications = n(),
     Certified_Applications = sum(CASE_STATUS == "CERTIFIED", na.rm = TRUE)
-  ) %>%
+  ) |>
   ungroup()
 
 # Map state abbreviations to full names
-state_period_data <- state_period_data %>%
+state_period_data <- state_period_data |>
   left_join(state_abbrev, by = "EMPLOYER_STATE")
 
 # Join with map data
-map_data <- us_states %>%
+map_data <- us_states |>
   left_join(state_period_data, by = "region")
 # Plot pre-Trump map with "YlGnBu" color scheme
 ggplot(filter(map_data, Period == "Pre-Trump (Oct 2016 - Jan 2017)"),
@@ -262,12 +260,12 @@ Across both periods, rural and Midwest states exhibit low application volumes, a
 
 ## Aligning Offered Salaries with Prevailing Wages: Insights from H-1B Petition Outcomes
 ```{r, fig.width=12, fig.height=8}
-# Load necessary librari
+# Load necessary library
 
 # Filter out rows with missing or invalid wage data and exclude extreme outliers
-h1b_filtered <- data %>%
+h1b_filtered <- data |>
   filter(!is.na(PREVAILING_WAGE) & !is.na(WAGE_RATE_OF_PAY_FROM) & 
-         PREVAILING_WAGE > 0 & WAGE_RATE_OF_PAY_FROM > 0) %>%
+         PREVAILING_WAGE > 0 & WAGE_RATE_OF_PAY_FROM > 0) |>
   filter(PREVAILING_WAGE < quantile(PREVAILING_WAGE, 0.99))  # Exclude top 1% of values
 
 # Create a scatter plot with log scale
@@ -290,7 +288,6 @@ ggplot(h1b_filtered, aes(x = PREVAILING_WAGE, y = WAGE_RATE_OF_PAY_FROM, color =
 
 ```
 
-2. Key Insights:
 	•	Correlation Between Offered and Prevailing Wage: The plot suggests a general upward correlation: as the prevailing wage increases, the actual wage offered also tends to rise. Most petitions hover around or slightly above their respective prevailing wage levels, highlighting compliance with the legal requirement to meet or exceed this benchmark.
 	
 	•	Certification Likelihood and Wage Alignment: A dense cluster of certified cases appears near or above the prevailing wage line, indicating that meeting or surpassing the prevailing wage is closely associated with higher rates of successful certification.
@@ -308,7 +305,7 @@ library(ggplot2)
 library(lubridate)
 
 # Prepare the data
-h1b_faceted <- data %>%
+h1b_faceted <- data |>
   mutate(
     Quarter = case_when(
       ymd(CASE_SUBMITTED) >= ymd("2016-10-01") & ymd(CASE_SUBMITTED) <= ymd("2016-12-31") ~ "Oct-Dec 2016",
@@ -322,18 +319,18 @@ h1b_faceted <- data %>%
       CONTINUED_EMPLOYMENT == 1 ~ "Continued Employment",
       TRUE ~ "Other"
     )
-  ) %>%
+  ) |>
   filter(EMPLOYMENT_TYPE != "Other", Quarter != "Other")  # Keep only relevant rows
 
 # Summarize counts for each quarter and employment type
-facet_data <- h1b_faceted %>%
-  group_by(Quarter, EMPLOYMENT_TYPE) %>%
+facet_data <- h1b_faceted |>
+  group_by(Quarter, EMPLOYMENT_TYPE) |>
   summarise(count = n(), .groups = "drop")
 
 # Calculate percentage of applications per quarter
-facet_data <- facet_data %>%
-  group_by(Quarter) %>%
-  mutate(percentage = count / sum(count) * 100) %>%
+facet_data <- facet_data |>
+  group_by(Quarter) |>
+  mutate(percentage = count / sum(count) * 100) |>
   ungroup()
 
 # Order the Quarter factor to ensure proper display in the plot
@@ -358,7 +355,6 @@ ggplot(facet_data, aes(x = EMPLOYMENT_TYPE, y = percentage, fill = EMPLOYMENT_TY
   facet_wrap(~ Quarter, ncol = 2, scales = 'free')
 
 ```
-Key Insights and Possible Reasons:
 	•	Seasonal Shifts in Workforce Strategy:
 The data highlights a dynamic shift between new and continued H-1B employment each quarter, with some periods favoring new employment while others prioritize continued employment.These fluctuations could be influenced by factors such as the H-1B cap season, USCIS processing timelines, or budgetary cycles in organizations. Employers may adjust their hiring or retention strategies based on economic or regulatory uncertainties.
 
@@ -373,20 +369,20 @@ In these quarters, continued employment applications significantly outpaced new 
 This shift could be due to increasing regulatory scrutiny or higher denial rates for new applications, pushing employers to rely on proven talent already in their workforce. Additionally, renewing visas for existing employees may have been a lower-risk option compared to navigating uncertainties with new hires.
 
 
-
+## Converging at the Top: How Leading H-1B Industries Align on High-End Compensation
 ```{r, fig.width=8, fig.height=8}
 
 # Filter and map industries
-h1b_filtered <- data %>%
-  filter(!is.na(PREVAILING_WAGE) & PREVAILING_WAGE > 0 & !is.na(NAICS_CODE)) %>%
-  mutate(Industry = naics_to_industry[as.character(NAICS_CODE)]) %>% # Map NAICS_CODE to Industry
+h1b_filtered <- data |>
+  filter(!is.na(PREVAILING_WAGE) & PREVAILING_WAGE > 0 & !is.na(NAICS_CODE)) |>
+  mutate(Industry = naics_to_industry[as.character(NAICS_CODE)]) |> # Map NAICS_CODE to Industry
   filter(!is.na(Industry))  # Keep only rows with valid industry names
 
 # Calculate the 99th percentile of prevailing wages
 wage_99th_percentile <- quantile(h1b_filtered$PREVAILING_WAGE, 0.99)
 
 # Filter out rows above the 99th percentile
-h1b_filtered <- h1b_filtered %>%
+h1b_filtered <- h1b_filtered |>
   filter(PREVAILING_WAGE <= wage_99th_percentile)
 
 # Create a box plot
@@ -406,10 +402,21 @@ ggplot(h1b_filtered, aes(x = Industry, y = PREVAILING_WAGE)) +
 
 ```
 
+	1.	Consistent High-End Salaries Across Industries: At the 99th percentile, wages in fields ranging from Accounting to Computer Systems show a remarkably similar upper wage range. This consistency likely stems from employers competing in a tight talent market for top-tier, highly specialized foreign professionals, prompting them to offer similar premium compensation packages.
+	
+	2.	Limited Variation at the Top End: Despite covering diverse sectors (e.g., Management Consulting vs. Education), the high-end wages remain closely aligned. This pattern suggests that market-driven forces and prevailing wage regulations push companies to meet or exceed certain standardized benchmarks, resulting in a wage ceiling that looks quite uniform across different industries.
+	
+	3.	Wide Spreads with Occasional Low Outliers: The log scale reveals some data points trailing at much lower wage levels within each industry, which may represent atypical positions, less experienced candidates, or unique contract arrangements. Even so, the majority cluster at the higher end, reflecting a strong demand for high-skilled talent and a willingness by employers to offer compensation that can attract and retain such workers.
+
+(PS: We are using the 99th percentile here because we want to ignore certain outlier cases, such as wages of 2,000,000 USD.)
+
+
+
+## Certification Dominates: Exploring H-1B Petition Outcomes Across Different Wage Tiers
 ```{r, fig.width=16, fig.height=8}
 # Prepare the data
-mosaic_data <- filtered_data %>%
-  filter(!is.na(PREVAILING_WAGE), !is.na(CASE_STATUS)) %>%
+mosaic_data <- filtered_data |>
+  filter(!is.na(PREVAILING_WAGE), !is.na(CASE_STATUS)) |>
   mutate(
     Wage_Range = cut(
       PREVAILING_WAGE,
@@ -431,16 +438,27 @@ ggplot(mosaic_data) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+	1.	Dominance of Certification at All Wage Levels: Across every wage bracket, the proportion of certified cases is overwhelmingly large. This suggests a strong positive association between typical wage ranges and successful certification. In other words, no matter the wage tier, cases are much more likely to be certified than denied or withdrawn.
+	
+	2.	Limited Variation in Denial/Withdrawal by Wage Range: Although higher wage tiers form narrower segments (indicating fewer total petitions at those levels), the proportion of denied or withdrawn cases remains relatively small across all wage categories. This implies that there isn’t a strong correlation between a specific wage range and a higher likelihood of denial or withdrawal.
+	
+	3.	Stable Outcome Patterns Across Ranges: The pattern of a substantial certification segment with thin layers of denied and withdrawn cases remains consistent from lower to higher wage tiers. This consistency suggests that while wage might influence the total volume of petitions, it doesn’t dramatically shift the balance of outcomes.
+
+Overall, the mosaic plot indicates that, regardless of wage category, the most common outcome is certification, and there isn’t a clear wage-driven correlation that drastically changes the proportion of denied or withdrawn cases.
+
+
+
+## Minimal Influence of Wage Levels on H-1B Petition Denial Rates
 ```{r, fig.width=8, fig.height=6}
 # Prepare data: Calculate average prevailing wage and denial rate by state
-scatter_data <- filtered_data %>%
-  filter(!is.na(PREVAILING_WAGE), !is.na(CASE_STATUS)) %>%
-  group_by(EMPLOYER_STATE) %>%
+scatter_data <- filtered_data |>
+  filter(!is.na(PREVAILING_WAGE), !is.na(CASE_STATUS)) |>
+  group_by(EMPLOYER_STATE) |>
   summarise(
     Avg_Prevailing_Wage = mean(PREVAILING_WAGE, na.rm = TRUE),
     Total_Applications = n(),
     Denial_Rate = sum(CASE_STATUS == "DENIED") / Total_Applications
-  ) %>%
+  ) |>
   filter(!is.na(Denial_Rate))
 
 # Create the scatter plot
@@ -470,26 +488,35 @@ ggplot(scatter_data, aes(x = Avg_Prevailing_Wage, y = Denial_Rate)) +
   )
 ```
 
+	1.	Near-Flat Relationship: The fitted trend line is almost horizontal, indicating that as average prevailing wage increases, the denial rate does not significantly rise or fall. This suggests that wage levels alone don’t strongly correlate with the likelihood of a petition being denied.
+	2.	Low Denial Rates for Most Wage Levels: Most data points cluster at very low denial rates across the entire wage spectrum. This pattern reinforces the idea that meeting prevailing wage requirements is routine for employers, reducing the chance of denial irrespective of wage category.
+	3.	A Few Isolated High-Denial Outliers: The occasional points displaying higher denial rates at various wage levels appear as exceptions rather than indicative of a wage-driven pattern. These isolated cases may stem from specific employer practices, incomplete documentation, or niche job requirements rather than the wage level itself.
+
+Overall, the graph suggests that denial rates remain consistently low and stable across different prevailing wage ranges, highlighting that other factors—beyond simply offering higher or lower wages—are more critical in determining a petition’s outcome.
+
+
+
+## Mapping the Path of H-1B Approvals: From Major Employers to U.S. States to Certification
 ```{r, fig.width=18, fig.height=10}
 library(ggplot2)
 library(ggalluvial)
 library(dplyr)
 
 # Prepare data for the alluvial diagram
-alluvial_data <- filtered_data %>%
-  filter(!is.na(EMPLOYER_NAME), !is.na(EMPLOYER_STATE), !is.na(CASE_STATUS)) %>%
-  group_by(EMPLOYER_NAME, EMPLOYER_STATE, CASE_STATUS) %>%
-  summarise(Count = n(), .groups = "drop") %>%
+alluvial_data <- filtered_data |>
+  filter(!is.na(EMPLOYER_NAME), !is.na(EMPLOYER_STATE), !is.na(CASE_STATUS)) |>
+  group_by(EMPLOYER_NAME, EMPLOYER_STATE, CASE_STATUS) |>
+  summarise(Count = n(), .groups = "drop") |>
   arrange(desc(Count))
 
 # Limit to top 10 employers for readability
-top_employers <- alluvial_data %>%
-  group_by(EMPLOYER_NAME) %>%
-  summarise(Total = sum(Count)) %>%
-  arrange(desc(Total)) %>%
+top_employers <- alluvial_data |>
+  group_by(EMPLOYER_NAME) |>
+  summarise(Total = sum(Count)) |>
+  arrange(desc(Total)) |>
   slice_head(n = 10)
 
-filtered_alluvial_data <- alluvial_data %>%
+filtered_alluvial_data <- alluvial_data |>
   filter(EMPLOYER_NAME %in% top_employers$EMPLOYER_NAME)
 
 # Create the alluvial diagram
@@ -513,9 +540,21 @@ ggplot(filtered_alluvial_data,
   )
 ```
 
+
+	1.	Large Consulting Firms and Tech Giants Lead the Flow Toward Certification:
+The alluvial diagram shows that prominent industry players—multinational consulting firms and leading tech companies—feed a steady stream of H-1B applications into various U.S. states, with the majority of these applications ultimately landing in the “Certified” status. This pattern indicates that established employers, well-versed in compliance, are adept at navigating the H-1B process to meet requirements and secure approvals.
+
+	2.	Widespread Geographic Distribution with Consistent Outcomes:
+Employers channel applications into multiple states—such as California, Texas, and New York—yet the outcome remains highly skewed toward certification. This stability across states suggests that while employers leverage diverse geographic footprints, the core processes and prevailing wage justifications they employ lead to similar results regardless of location.
+
+	3.	Minor Proportions of Denials and Withdrawals Amid High Volumes:
+Although the diagram shows occasional streams flowing into “Denied” or “Withdrawn” categories, these are relatively thin strands compared to the dominant “Certified” channel. Such minimal deviations likely reflect instances where documentation, job requirements, or market conditions did not fully align with regulatory criteria. Overall, however, the high-certification pattern underscores that large, experienced employers can reliably meet the structured criteria of the H-1B program, achieving success irrespective of the state in which the position is based.
+
+
+## Uneven Terrain: H-1B Certified Wage Data Deviates Strongly from a Normal Distribution
 ```{r}
 # Filter data for certified applications and remove missing wages
-certified_data <- filtered_data %>%
+certified_data <- filtered_data |>
   filter(CASE_STATUS == "CERTIFIED" & !is.na(PREVAILING_WAGE))
 
 # Create QQ plot for prevailing wages
@@ -532,5 +571,17 @@ ggplot(certified_data, aes(sample = PREVAILING_WAGE)) +
     plot.title = element_text(size = 14, face = "bold"),
     axis.text = element_text(size = 10),
     axis.title = element_text(size = 12)
-  )
+  ) + 
+  scale_y_continuous(labels = comma)
 ```
+
+
+	1.The QQ plot reveals that actual wage quantiles deviate considerably from the theoretical normal line, particularly toward the higher end. This indicates a distribution dominated by a large number of moderately paid positions and a relatively smaller but impactful cluster of very high-paying roles, creating a heavy right tail.
+	
+	2. The sharp upward curve at higher quantiles suggests that while most certified wages fall within a broad middle range, there’s a distinct subset of specialized positions offering exceptionally high salaries. This premium on certain sought-after skill sets or niche expertise skews the overall wage structure away from the bell-curve symmetry one might expect in a more uniform labor market.
+	
+	3.The presence of these extremely high wages is likely driven by a combination of competitive employer practices, regulatory prevailing wage benchmarks, and market scarcity for top-tier talent. Rather than forming a neat, normal distribution, the result is a wage landscape characterized by broad variation and a handful of outlier salaries that pull the distribution’s tail upward.
+
+
+
+

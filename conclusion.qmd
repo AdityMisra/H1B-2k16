@@ -1,1 +1,13 @@
 # Conclusion
+
+Main Takeaways:
+H-1B petitions are largely certified, with consistent outcomes across industries and states. Wage distributions highlight a broad mid-range and a smaller cluster of high-paying roles, reflecting demand for specialized talent. Denial rates are low and show minimal correlation with wages, emphasizing the role of qualitative factors like documentation and job specificity.
+
+Limitations:
+Our analysis is constrained by the available data and the year studied (2016-2017). Factors such as policy changes, macroeconomic shifts, or evolving industry standards outside this period are not fully accounted for. Additionally, the data do not capture qualitative aspects of job roles, internal hiring practices, or the nuances of legal counsel involvement—factors that can significantly influence success rates. Our statistical measures provide correlational patterns, not causal conclusions, and certain outliers or anomalies remain unexplained without deeper qualitative investigation.
+
+Future Directions:
+An extension would be to examine multiple years before and after the political changes of 2017 to assess longer-term trends and policy effects. Incorporating more granular job and skill data could shed light on which exact competencies command premium wages or face stricter scrutiny. Evaluating employer characteristics—such as company size, track record with H-1B, and geographic footprints—could offer richer insights into why certain firms excel at navigating the system. 
+
+Lessons Learned:
+This project underscores the importance of data-driven approaches in understanding policy-driven processes like the H-1B program. Clear patterns can emerge even in complex systems, such as consistent certification rates and wage dynamics, but quantitative data alone only tell part of the story. Combining numeric insights with contextual knowledge, such as industry trends and policy nuances, is crucial for a holistic understanding and informed decision-making.
