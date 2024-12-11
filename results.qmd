@@ -11,7 +11,7 @@ library(ggmosaic)
 # Load the dataset
 data <- read.csv("H1B_2017_cleaned.csv")
 ```
-
+## When Do H-1B Approvals Peak? Exploring Quaterly Surges and Outcomes Amid Governmental Transition Years 
 ```{r}
 # Convert DECISION_DATE to date format
 data$DECISION_DATE <- as.Date(data$DECISION_DATE)
@@ -58,7 +58,26 @@ ggplot(status_counts, aes(x = Quarter, y = Count, fill = CASE_STATUS)) +
   theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
   scale_y_continuous(labels = comma)
 ```
+Key Observations:
 
+Dominance of Certified Cases: Across all quarters shown (Q4 2016 through Q3 2017), the green bar representing CERTIFIED cases dominates the distribution. Even in the lowest volume quarters, the majority of processed cases were approved, suggesting a strong tendency towards granting H-1B visas when petitions are properly filed and meet criteria.
+
+Quarterly Volume Fluctuations:
+	•	Q1 2017 Surge: There’s a pronounced spike in total cases during Q1 2017. The total number of cases processed (over 300,000) in this quarter is roughly three times that of Q4 2016 and significantly higher than Q2 and Q3 2017.
+	
+	•	Stable Lower Volumes in Other Quarters: Q4 2016, Q2 2017, and Q3 2017 show more moderate and relatively similar total volumes, hovering around the 100,000-case mark.
+
+Consistency in Status Proportions (beyond Certified):
+While the largest category (CERTIFIED) overshadows the rest, the relative proportions of DENIED, WITHDRAWN, and CERTIFIED-WITHDRAWN appear fairly steady. Each of these categories consistently represents a small fraction of total cases, implying that the big story lies in when and how many cases are processed, rather than dramatic shifts in approval vs. denial rates from one quarter to another.
+
+Potential Seasonal or Policy-Related Timing:
+The Q1 2017 peak likely corresponds with the period when the bulk of petitions for the next fiscal cycle are being processed, reflecting the U.S. government’s typical schedule for reviewing the large volume of H-1B cap-subject petitions submitted in early April of the preceding year. While the chart doesn’t show exact submission dates, it strongly suggests a seasonal pattern in H-1B case volume and finalization.
+
+The graph shows a consistent proportion of approvals across quarters, with minor fluctuations in denials and withdrawals. This consistency suggests that, despite a government transition in early 2017, there was no immediate or drastic shift in policy enforcement affecting case outcomes. However, the high number of withdrawn petitions in Q1 2017 could indicate some uncertainty among employers or applicants regarding policy direction under the new administration, leading them to reconsider or withdraw applications during this critical period.
+
+
+
+## Who wins the H-1B race? An Industry-Wise Look At Approvals and Denials
 ```{r, fig.width=12, fig.height=8}
 # NAICS Code to Industry Name Mapping
 naics_to_industry <- c(
@@ -124,6 +143,30 @@ ggplot(top_industry_data, aes(
 
 ```
 
+Key Observations
+	1.	Dominance of CERTIFIED Applications in Technology-Driven Industries: Programming Services and Computer Design industries account for the majority of CERTIFIED        applications, with Programming Services showing significantly higher numbers than other sectors. Other tech-related sectors, such as Technical Consulting and         Computer Systems, also have strong representation, highlighting the demand for tech talent.
+	    
+	    These industries have consistently relied on the H-1B program to fill skill gaps, particularly for specialized roles like software developers, systems analysts,       and IT consultants.
+	
+	
+	2.	Proportionately Low CERTIFIED-WITHDRAWN Applications: Compared to CERTIFIED, the number of CERTIFIED-WITHDRAWN applications is much smaller across all                industries. However, the same industries dominate this category, indicating that companies in Programming Services and Computer Design might face internal or         external factors leading to withdrawal post-approval.
+	
+	3.	Concentration of DENIALS in Tech Industries: The Programming Services and Computer Design industries also show the highest number of DENIED applications,             suggesting stricter scrutiny or potential issues in petition filings for these sectors.
+	  
+	    This could be due to several factors, including:
+	    •	Higher scrutiny of petitions in these industries due to past instances of program misuse.
+    	•	Complex job descriptions or role justifications that fail to meet the “specialty occupation” criteria.
+    	•	Increased competition leading to marginal cases being rejected.
+	
+	    Education also features among the industries with notable denials. Denials may stem from challenges in meeting prevailing wage requirements or providing             sufficient documentation of role specialization
+	
+	4.	WITHDRAWN Petitions Show Industry Variance: While WITHDRAWN cases are present across all industries, Programming Services again leads. The high volume in             tech-focused sectors could reflect dynamic project needs or strategic employer decisions in response to changing business conditions or policy uncertainties.
+	
+	5.	Non-Tech Representation Is Limited but Present: Non-tech industries like Education, Engineering Services, and Accountants appear across all categories but in         significantly smaller numbers. These industries seem to have lower rejection and withdrawal rates, possibly due to clearer alignment with eligibility criteria        or smaller petition volumes overall.
+
+
+
+## H-1B Application and Regional patterns Amid the Transition
 ```{r}
 filtered_data <- filtered_data %>%
   mutate(
@@ -204,6 +247,20 @@ ggplot(filter(map_data, Period == "Post-Trump (Jan 2017 - Sep 2017)"),
 
 ```
 
+
+The two maps present a comparative view of H-1B application volumes across U.S. states during the Pre-Trump Period (October 2016 – January 2017) and the Post-Trump Period (January 2017 – September 2017). While the Post-Trump Period covers a longer timeframe (three quarters versus one quarter), the trends still provide valuable insights into regional patterns and the influence of governmental transition on H-1B applications.
+
+1. Dominance of Key States
+
+In both periods, California, Texas, New York, and New Jersey lead in H-1B applications, emphasizing their economic reliance on high-skilled international workers. These states host global companies in tech, finance, and consulting industries, which depend heavily on the H-1B program to meet labor demands. Despite the longer timeframe in the Post-Trump Period, the consistency of these states’ dominance reflects their sustained role as hubs for global talent.
+
+2. Minimal Change in Rural and Midwest States
+
+Across both periods, rural and Midwest states exhibit low application volumes, as indicated by lighter shading on the maps. These regions’ economic focus on industries such as agriculture and manufacturing likely explains their limited reliance on H-1B talent, a pattern that remains consistent regardless of the political climate or timeframe.
+
+
+
+## Aligning Offered Salaries with Prevailing Wages: Insights from H-1B Petition Outcomes
 ```{r, fig.width=12, fig.height=8}
 # Load necessary librari
 
@@ -233,6 +290,17 @@ ggplot(h1b_filtered, aes(x = PREVAILING_WAGE, y = WAGE_RATE_OF_PAY_FROM, color =
 
 ```
 
+2. Key Insights:
+	•	Correlation Between Offered and Prevailing Wage: The plot suggests a general upward correlation: as the prevailing wage increases, the actual wage offered also tends to rise. Most petitions hover around or slightly above their respective prevailing wage levels, highlighting compliance with the legal requirement to meet or exceed this benchmark.
+	
+	•	Certification Likelihood and Wage Alignment: A dense cluster of certified cases appears near or above the prevailing wage line, indicating that meeting or surpassing the prevailing wage is closely associated with higher rates of successful certification.
+	
+	•	Distribution of Denials and Withdrawals: While certified cases dominate the dataset, denied and withdrawn petitions are scattered throughout. This pattern suggests that while offering a wage at or above the prevailing wage supports certification, other factors may still lead to petition denial or withdrawal at any wage level.
+	
+	•	Outliers and High-Wage Petitions: A small number of cases offer wages significantly higher than the prevailing wage. Although less common, these outliers may reflect niche roles or employers willing to pay a substantial premium to secure specialized talent.
+
+
+## New Talent or the Experienced Workforce: Which Drives H-1B trends?
 ```{r}
 # Load necessary libraries
 library(dplyr)
@@ -290,6 +358,21 @@ ggplot(facet_data, aes(x = EMPLOYMENT_TYPE, y = percentage, fill = EMPLOYMENT_TY
   facet_wrap(~ Quarter, ncol = 2, scales = 'free')
 
 ```
+Key Insights and Possible Reasons:
+	•	Seasonal Shifts in Workforce Strategy:
+The data highlights a dynamic shift between new and continued H-1B employment each quarter, with some periods favoring new employment while others prioritize continued employment.These fluctuations could be influenced by factors such as the H-1B cap season, USCIS processing timelines, or budgetary cycles in organizations. Employers may adjust their hiring or retention strategies based on economic or regulatory uncertainties.
+
+	•	Balanced Demand for New and Continued Employment (Oct-Dec 2016):
+During this quarter, the distribution between new and continued employment applications was nearly equal, indicating a steady demand for both hiring fresh talent and retaining existing workers. This period likely reflects employers finalizing hiring plans after the H-1B lottery results and ensuring that current employees’ visas are extended before the fiscal year ends. It’s also a time when companies balance resources between growth and stability.
+
+	•	Surge in New Employment (Jan-Mar 2017):
+A noticeable increase in new employment applications during this quarter suggests that employers were focusing more on onboarding new talent than renewing existing employees.This trend could be linked to companies preparing for the new fiscal year or addressing fresh hiring needs aligned with annual business objectives. Additionally, employers may have expedited new applications ahead of expected policy changes during a politically transitional period.
+
+	•	Dominance of Continued Employment (Apr-Jun & Jul-Sep 2017):
+In these quarters, continued employment applications significantly outpaced new employment, suggesting a strong focus on retaining existing H-1B employees.
+This shift could be due to increasing regulatory scrutiny or higher denial rates for new applications, pushing employers to rely on proven talent already in their workforce. Additionally, renewing visas for existing employees may have been a lower-risk option compared to navigating uncertainties with new hires.
+
+
 
 ```{r, fig.width=8, fig.height=8}
 
