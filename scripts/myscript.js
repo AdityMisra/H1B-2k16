@@ -173,6 +173,23 @@ function updateChart() {
     tooltip.style("visibility", "hidden");
     d3.select(event.target).attr("fill", "steelblue");
   });
+  
+const barText = svg.selectAll(".bar-text")
+    .data(filteredData, d => d.EMPLOYER_STATE);
+
+  // Remove old text
+  barText.exit().remove();
+
+  // Add new text
+  barText.enter()
+    .append("text")
+    .attr("class", "bar-text")
+    .attr("x", d => xScale(d.EMPLOYER_STATE) + xScale.bandwidth() / 2) // Center horizontally
+    .attr("y", d => yScale(d.Total_Certified) - 5) // Slightly above the bar
+    .attr("text-anchor", "middle")
+    .style("fill", "white")
+    .style("font-size", "12px")
+    .text(d => d.Total_Certified);
 
   // Update existing bars
   bars

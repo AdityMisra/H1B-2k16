@@ -20,6 +20,58 @@
 :::
 
 ```{=html}
+<div>
+  <h3>Interactive Graph</h3>
+  <p>
+    This interactive bar chart allows you to explore <strong>H1B Certified Applications by State</strong>, enabling customized visualization and dynamic interactivity.
+  </p>
+  
+  <h4>How to Use the Graph</h4>
+  <ol>
+    <li>
+      <strong>Select a State:</strong> Use the dropdown menu labeled <em>"Select State"</em> to choose a state from the list.
+    </li>
+    <li>
+      <strong>Add a State to the Graph:</strong> After selecting a state, click the <em>"Add State"</em> button. The selected state will be added as a bar in the chart, showing its certified application count.
+    </li>
+    <li>
+      <strong>Remove a State:</strong> Select a state from the dropdown menu that is already displayed on the graph. Click the <em>"Remove State"</em> button to remove it from the graph.
+    </li>
+  </ol>
+  
+  <h4>Purpose and Benefits</h4>
+  <ul>
+    <li>
+      Allows users to explore <strong>state-wise trends</strong> in H1B certifications.
+    </li>
+    <li>
+      Provides flexibility for users to customize their analysis by dynamically adding or removing states.
+    </li>
+    <li>
+      Facilitates easy comparisons with clearly labeled axes and an intuitive interface.
+    </li>
+  </ul>
+  
+  <p>
+    <strong>Who is it for?</strong>
+    This graph is particularly useful for:
+  </p>
+  <ul>
+    <li>
+      <strong>Employers and Recruiters:</strong> To identify key states for H1B hiring.
+    </li>
+    <li>
+      <strong>Policy Makers:</strong> To analyze distribution trends in certified H1B applications.
+    </li>
+    <li>
+      <strong>Applicants:</strong> To understand certification patterns across states.
+    </li>
+  </ul>
+</div>
+```
+
+
+```{=html}
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 ```
 
